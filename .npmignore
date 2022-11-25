@@ -1,0 +1,14 @@
+.git/
+.idea/
+.DS_Store
+libs/
+xgraph/
+node_modules/*
+src/
+test/
+build/*
+tags/*
+.history
+.vscode/
+.tmp/
+package-lock.json

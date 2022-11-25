@@ -1,0 +1,16 @@
+.git/
+.idea/
+.DS_Store
+xgraph/
+node_modules
+dist/
+_upgrade/
+src/**/*.js
+build/**/*.xg.js
+tags/*
+.history
+.vscode/
+.tmp/
+app/
+_pub/
+package-lock.json
