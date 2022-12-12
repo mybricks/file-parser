@@ -221,17 +221,22 @@ export function toJSON({slot, frame}) {
         Arrays.each(pin => {
           scanInputPin(pin, com.id)
           inputPinIdAry.push(pin.hostId)
-        }, ...com.getInputsAll())
+        }, [com.inputPins,
+          com.inputPinsInModel,
+          com.inputPinExts,
+        ])
 
         Arrays.each(pin => {
           scanOutputPin(pin, com.id)
           outPinIdAry.push(pin.hostId)
-        }, ...com.getOutputsAll())
+        }, [com.outputPins,
+          com.outputPinsInModel,
+          com.outputPinExts])
         // if (com.runtime.def.rtType === 'js') {
         //
         // }
 
-        if (com.isAutoRun() && def.rtType?.match(/^js/)) {
+        if (com._autoRun && def.rtType?.match(/^js/)) {
           const idPre = frame.parent ? `${frame.parent.id}-${frame.id}` : '_rootFrame_'
           let ary = comsAutoRun[idPre]
           if (!ary) {
