@@ -111,7 +111,7 @@ export function toJSON({slot, frame}) {
 
               scanOutputPin(forkedFromJointPin, newIdPre)//scan for it
             } else {
-              const comId = fp.parent._type === 1 ? fp.parent.id : void 0//toplcom
+              const comId = fp.parent?._type === 1 ? fp.parent.id : void 0//toplcom
               cons.push({
                 type: 'frame',
                 frameId: fp.id,
@@ -192,7 +192,6 @@ export function toJSON({slot, frame}) {
           depsReg.push(def)
         }
 
-
         const configPinIdAry = []
         const inputPinIdAry = []
         const outPinIdAry = []
@@ -202,6 +201,7 @@ export function toJSON({slot, frame}) {
         comsReg[com.id] = {
           def,
           frameId: frame.parent ? frame.id : void 0,
+          title:com.runtime.title,
           model: com.runtime.model,
           reservedEditorAry: geo ? geo.reservedEditorAry : void 0,
           configs: configPinIdAry,
