@@ -46,7 +46,7 @@ export function toJSON({slot, frame}) {
 
     if (pin.proxyPin) {
       const comOrFrame = pin.proxyPin.parent
-      if (comOrFrame._type===0) {//frame
+      if (comOrFrame._type === 0) {//frame
         const frameId = comOrFrame.id
 
         if (comOrFrame) {
@@ -93,7 +93,7 @@ export function toJSON({slot, frame}) {
           }
 
           const fp = realFPin.parent
-          if (fp._type===0) {//frame
+          if (fp._type === 0) {//frame
             const forkedFromJointPin = realFPin.forkedAsJoint//joint
             if (forkedFromJointPin) {
               const con = {
@@ -201,7 +201,8 @@ export function toJSON({slot, frame}) {
         comsReg[com.id] = {
           def,
           frameId: frame.parent ? frame.id : void 0,
-          title:com.runtime.title,
+          parentComId: frame.parent?.id,
+          title: com.runtime.title,
           model: com.runtime.model,
           reservedEditorAry: geo ? geo.reservedEditorAry : void 0,
           configs: configPinIdAry,
@@ -221,17 +222,17 @@ export function toJSON({slot, frame}) {
         Arrays.each(pin => {
           scanInputPin(pin, com.id)
           inputPinIdAry.push(pin.hostId)
-        }, [com.inputPins,
+        }, com.inputPins,
           com.inputPinsInModel,
           com.inputPinExts,
-        ])
+        )
 
         Arrays.each(pin => {
           scanOutputPin(pin, com.id)
           outPinIdAry.push(pin.hostId)
-        }, [com.outputPins,
+        }, com.outputPins,
           com.outputPinsInModel,
-          com.outputPinExts])
+          com.outputPinExts)
         // if (com.runtime.def.rtType === 'js') {
         //
         // }
