@@ -17,7 +17,7 @@ export function toJSON({slot, frame}) {
             }
           })
         }
-        comAry.push({id: com.id, def: com.runtime.def, slots})
+        comAry.push({id: com.runtime.id, def: com.runtime.def, slots})
       })
 
       return {comAry, style: slot.style}
@@ -184,7 +184,8 @@ export function toJSON({slot, frame}) {
 
     if (frame.comAry) {
       frame.comAry.forEach(com => {
-        const def = com.runtime.def
+        const rt = com.runtime
+        const def = rt.def
         if (!depsReg.find(now => now.namespace === def.namespace && now.version === def.version)) {
           depsReg.push(def)
         }
@@ -193,14 +194,14 @@ export function toJSON({slot, frame}) {
         const inputPinIdAry = []
         const outPinIdAry = []
 
-        const geo = com.runtime.geo
+        const geo = rt.geo
 
-        comsReg[com.id] = {
+        comsReg[rt.id] = {
           def,
           frameId: frame.parent ? frame.id : void 0,
           parentComId: frame.parent?.id,
-          title: com.runtime.title,
-          model: com.runtime.model,
+          title: rt.title,
+          model: rt.model,
           reservedEditorAry: geo ? geo.reservedEditorAry : void 0,
           configs: configPinIdAry,
           inputs: inputPinIdAry,
@@ -217,7 +218,7 @@ export function toJSON({slot, frame}) {
         }
 
         Arrays.each(pin => {
-          scanInputPin(pin, com.id)
+          scanInputPin(pin, rt.id)
           inputPinIdAry.push(pin.hostId)
         }, com.inputPins,
           com.inputPinsInModel,
@@ -225,7 +226,7 @@ export function toJSON({slot, frame}) {
         )
 
         Arrays.each(pin => {
-          scanOutputPin(pin, com.id)
+          scanOutputPin(pin, rt.id)
           outPinIdAry.push(pin.hostId)
         }, com.outputPins,
           com.outputPinsInModel,
@@ -241,7 +242,7 @@ export function toJSON({slot, frame}) {
             ary = comsAutoRun[idPre] = []
           }
           ary.push({
-            id: com.id,
+            id: rt.id,
             def
           })
         }
