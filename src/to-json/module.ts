@@ -83,7 +83,7 @@ export function toJSON({slot, frame}) {
             type: 'com',
             startPinParentKey,
             finishPinParentKey,
-            comId: pinParent.id,
+            comId: realParentCom.runtime.id,
             def: realParentCom.runtime.def,
             pinId: realFPin.hostId,
             pinType: realFPin.type,
@@ -112,7 +112,7 @@ export function toJSON({slot, frame}) {
 
               scanOutputPin(forkedFromJointPin, newIdPre)//scan for it
             } else {
-              const comId = fp.parent?._type === 1 ? fp.parent.id : void 0//toplcom
+              const comId = fp.parent?._type === 1 ? fp.parent.runtime.id : void 0//toplcom
               cons.push({
                 type: 'frame',
                 frameId: fp.id,
