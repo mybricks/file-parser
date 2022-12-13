@@ -1,0 +1,147 @@
+{
+    "deps": [
+        {
+            "namespace": "mybricks.normal-pc.link",
+            "version": "1.0.0"
+        },
+        {
+            "namespace": "mybricks.normal-pc.text",
+            "version": "1.0.0"
+        },
+        {
+            "namespace": "mybricks.normal-pc.richtext-preview",
+            "version": "1.0.0"
+        },
+        {
+            "namespace": "mybricks.normal-pc.toolbar",
+            "version": "1.0.2"
+        },
+        {
+            "namespace": "mybricks.normal-pc.breadcrumb",
+            "version": "1.0.0"
+        }
+    ],
+    "coms": {
+        "undefined": {
+            "def": {
+                "namespace": "mybricks.normal-pc.breadcrumb",
+                "version": "1.0.0"
+            },
+            "title": "面包屑",
+            "model": {
+                "data": {
+                    "separator": "/",
+                    "customSeparator": "",
+                    "padding": 0,
+                    "children": [
+                        {
+                            "key": "u_tnenc9",
+                            "label": "page-0",
+                            "event": {}
+                        },
+                        {
+                            "key": "u_f81din",
+                            "label": "page-1",
+                            "event": {}
+                        }
+                    ]
+                },
+                "inputAry": [],
+                "outputAry": [
+                    {
+                        "hostId": "u_tnenc9",
+                        "title": "点击事件",
+                        "schema": {
+                            "type": "any"
+                        }
+                    },
+                    {
+                        "hostId": "u_f81din",
+                        "title": "点击事件",
+                        "schema": {
+                            "type": "any"
+                        }
+                    },
+                    {
+                        "hostId": "u_tnenc9",
+                        "title": "点击事件",
+                        "schema": {
+                            "type": "any"
+                        }
+                    },
+                    {
+                        "hostId": "u_f81din",
+                        "title": "点击事件",
+                        "schema": {
+                            "type": "any"
+                        }
+                    }
+                ],
+                "outputEvents": {},
+                "style": {
+                    "display": "block",
+                    "left": 490,
+                    "top": 553,
+                    "width": "100%"
+                }
+            },
+            "configs": [],
+            "inputs": [
+                "show",
+                "hide",
+                "showOrHide"
+            ],
+            "outputs": [
+                "u_tnenc9",
+                "u_f81din"
+            ]
+        }
+    },
+    "slot": {
+        "comAry": [
+            {
+                "def": {
+                    "namespace": "mybricks.normal-pc.link",
+                    "version": "1.0.0"
+                }
+            },
+            {
+                "def": {
+                    "namespace": "mybricks.normal-pc.text",
+                    "version": "1.0.0"
+                }
+            },
+            {
+                "def": {
+                    "namespace": "mybricks.normal-pc.richtext-preview",
+                    "version": "1.0.0"
+                }
+            },
+            {
+                "def": {
+                    "namespace": "mybricks.normal-pc.toolbar",
+                    "version": "1.0.2"
+                }
+            },
+            {
+                "def": {
+                    "namespace": "mybricks.normal-pc.breadcrumb",
+                    "version": "1.0.0"
+                }
+            }
+        ],
+        "style": {
+            "zoom": 1,
+            "justifyContent": "flex-start",
+            "alignItems": "flex-start",
+            "height": 736,
+            "width": 1024
+        }
+    },
+    "comsAutoRun": {},
+    "inputs": [],
+    "outputs": [],
+    "cons": {},
+    "pinRels": {},
+    "pinProxies": {}
+}

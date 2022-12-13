@@ -4,6 +4,7 @@
   "description": "Parser for rxui file content",
   "main": "index.min.js",
   "scripts": {
+    "test": "ts-node --transpileOnly ./_test/index.ts",
     "build": "webpack --config ./scripts/webpack.build.js"
   },
   "repository": {
@@ -31,6 +32,7 @@
     "jest": "^26.6.3",
     "rimraf": "^2.6.2",
     "ts-loader": "^6.2.1",
+    "ts-node": "^10.9.1",
     "typescript": "^3.8.3",
     "webpack": "^4.42.0",
     "webpack-bundle-analyzer": "^3.6.1",
