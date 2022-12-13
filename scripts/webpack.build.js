@@ -25,7 +25,9 @@ module.exports = Object.assign({
    // },
    output: {
       path: path.resolve(__dirname, '..'),
-      filename: './index.js',
+      filename: './index.min.js',
+      library: "file-parser",
+      globalObject: 'this',
       libraryTarget: 'umd',
       //library: 'rxui',
    },
