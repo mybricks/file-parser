@@ -3,6 +3,7 @@
 const baseCfg = require('./webpack.base')
 
 module.exports = Object.assign({
+   mode: "production",
    entry: {
       index: path.resolve(__dirname, '../src/index.ts')
    },
