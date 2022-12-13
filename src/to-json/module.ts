@@ -73,24 +73,21 @@ export function toJSON({slot, frame}) {
 
         const pinParent = fPin.parent
         if (pinParent._type === 1) {//toplcom
+          const realFPin = pinParent.forkedFrom||pinParent
+
           cons.push({
             type: 'com',
             startPinParentKey: con.startPinParentKey,
             finishPinParentKey: con.finishPinParentKey,
             comId: pinParent.id,
-            def: pinParent.runtime.def,
+            def: realFPin.runtime.def,
             pinId: fPin.hostId,
             pinType: fPin.type,
             direction: fPin.direction,
             extBinding: fPin.extBinding
           })
         } else {
-          let realFPin
-          if (fPin.forkedFrom) {//forked pin
-            realFPin = fPin.forkedFrom
-          } else {
-            realFPin = fPin
-          }
+          const realFPin=fPin.forkedFrom||fPin
 
           const fp = realFPin.parent
           if (fp._type === 0) {//frame
