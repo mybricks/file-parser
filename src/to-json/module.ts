@@ -73,21 +73,25 @@ export function toJSON({slot, frame}) {
 
         const pinParent = fPin.parent
         if (pinParent._type === 1) {//toplcom
-          const realFPin = pinParent.forkedFrom||pinParent
+          const realFPin = fPin.forkedFrom || fPin
+          const realParentCom = pinParent.forkedFrom || pinParent
+
+          const startPinParentKey = con.startPin.parent._key
+          const finishPinParentKey = con.finishPin.parent._key
 
           cons.push({
             type: 'com',
-            startPinParentKey: con.startPinParentKey,
-            finishPinParentKey: con.finishPinParentKey,
+            startPinParentKey,
+            finishPinParentKey,
             comId: pinParent.id,
-            def: realFPin.runtime.def,
-            pinId: fPin.hostId,
-            pinType: fPin.type,
-            direction: fPin.direction,
-            extBinding: fPin.extBinding
+            def: realParentCom.runtime.def,
+            pinId: realFPin.hostId,
+            pinType: realFPin.type,
+            direction: realFPin.direction,
+            extBinding: realFPin.extBinding
           })
         } else {
-          const realFPin=fPin.forkedFrom||fPin
+          const realFPin = fPin.forkedFrom || fPin
 
           const fp = realFPin.parent
           if (fp._type === 0) {//frame
@@ -218,17 +222,17 @@ export function toJSON({slot, frame}) {
         }
 
         Arrays.each(pin => {
-          scanInputPin(pin, rt.id)
-          inputPinIdAry.push(pin.hostId)
-        }, com.inputPins,
+            scanInputPin(pin, rt.id)
+            inputPinIdAry.push(pin.hostId)
+          }, com.inputPins,
           com.inputPinsInModel,
           com.inputPinExts,
         )
 
         Arrays.each(pin => {
-          scanOutputPin(pin, rt.id)
-          outPinIdAry.push(pin.hostId)
-        }, com.outputPins,
+            scanOutputPin(pin, rt.id)
+            outPinIdAry.push(pin.hostId)
+          }, com.outputPins,
           com.outputPinsInModel,
           com.outputPinExts)
         // if (com.runtime.def.rtType === 'js') {
