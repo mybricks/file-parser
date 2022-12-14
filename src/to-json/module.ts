@@ -239,7 +239,7 @@ export function toJSON({slot, frame}) {
         //
         // }
 
-        if (com._autoRun && def.rtType?.match(/^js/)) {
+        if (rt._autoRun && def.rtType?.match(/^js/)) {
           const idPre = frame.parent ? `${frame.parent.id}-${frame.id}` : '_rootFrame_'
           let ary = comsAutoRun[idPre]
           if (!ary) {
