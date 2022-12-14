@@ -100,7 +100,7 @@ export function toJSON({slot, frame}) {
               const con = {
                 type: 'frame',
                 frameId: fp.id,
-                comId: fp.parent ? fp.parent.id : void 0,
+                comId: fp.parent ? fp.parent.runtime.id : void 0,
                 pinId: forkedFromJointPin.hostId,
                 pinType: forkedFromJointPin.type,
                 direction: forkedFromJointPin.direction
@@ -137,7 +137,7 @@ export function toJSON({slot, frame}) {
       frame.inputPins.forEach(pin => {
         let idPre
         if (frame.parent && frame.parent._type === 1) {//toplcom
-          idPre = `${frame.parent.id}-${frame.id}`
+          idPre = `${frame.parent.runtime.id}-${frame.id}`
         } else if (frame.parent) {
           idPre = frame.id
         } else {
@@ -203,7 +203,7 @@ export function toJSON({slot, frame}) {
         comsReg[rt.id] = {
           def,
           frameId: frame.parent ? frame.id : void 0,
-          parentComId: frame.parent?.id,
+          parentComId: frame.parent?.runtime.id,
           title: rt.title,
           model: rt.model,
           reservedEditorAry: geo ? geo.reservedEditorAry : void 0,
@@ -240,7 +240,7 @@ export function toJSON({slot, frame}) {
         // }
 
         if (rt._autoRun && def.rtType?.match(/^js/)) {
-          const idPre = frame.parent ? `${frame.parent.id}-${frame.id}` : '_rootFrame_'
+          const idPre = frame.parent ? `${frame.parent.runtime.id}-${frame.id}` : '_rootFrame_'
           let ary = comsAutoRun[idPre]
           if (!ary) {
             ary = comsAutoRun[idPre] = []
