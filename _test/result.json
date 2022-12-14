@@ -1,133 +1,153 @@
 {
     "deps": [
         {
-            "namespace": "mybricks.normal-pc.link",
+            "namespace": "mybricks.normal-pc.table",
             "version": "1.0.0"
         },
         {
-            "namespace": "mybricks.normal-pc.text",
-            "version": "1.0.0"
-        },
-        {
-            "namespace": "mybricks.normal-pc.richtext-preview",
-            "version": "1.0.0"
-        },
-        {
-            "namespace": "mybricks.normal-pc.toolbar",
-            "version": "1.0.2"
-        },
-        {
-            "namespace": "mybricks.normal-pc.breadcrumb",
-            "version": "1.0.0"
+            "namespace": "mybricks.normal-pc.segment",
+            "version": "1.0.0",
+            "rtType": "js-autorun"
         }
     ],
     "coms": {
-        "undefined": {
+        "u_wmY3W": {
             "def": {
-                "namespace": "mybricks.normal-pc.breadcrumb",
+                "namespace": "mybricks.normal-pc.table",
                 "version": "1.0.0"
             },
-            "title": "面包屑",
+            "title": "数据表格",
             "model": {
                 "data": {
-                    "separator": "/",
-                    "customSeparator": "",
-                    "padding": 0,
-                    "children": [
+                    "rowKey": "",
+                    "dataSource": [],
+                    "columns": [
                         {
-                            "key": "u_tnenc9",
-                            "label": "page-0",
-                            "event": {}
+                            "title": "名称",
+                            "key": "u_dfta0m",
+                            "width": 140,
+                            "visible": true,
+                            "contentType": "text",
+                            "_id": "2w7KiV",
+                            "dataIndex": "name",
+                            "keepDataIndex": true
                         },
                         {
-                            "key": "u_f81din",
-                            "label": "page-1",
-                            "event": {}
+                            "title": "邮箱",
+                            "key": "u_0z98mh",
+                            "width": 140,
+                            "visible": true,
+                            "contentType": "text",
+                            "_id": "A5Fdz3",
+                            "dataIndex": "email",
+                            "keepDataIndex": true
                         }
-                    ]
+                    ],
+                    "fixedHeader": false,
+                    "scroll": {
+                        "y": "",
+                        "scrollToFirstRowOnChange": true
+                    },
+                    "bordered": false,
+                    "size": "middle",
+                    "useRowSelection": false,
+                    "rowSelection": {
+                        "type": "checkbox"
+                    },
+                    "rowSelectionPostion": [
+                        "top",
+                        "bottom"
+                    ],
+                    "useLoading": true,
+                    "tableLayout": "fixed",
+                    "loadingTip": "",
+                    "usePagination": false,
+                    "paginationConfig": {
+                        "total": 20,
+                        "text": "共 {total} 条结果",
+                        "current": 1,
+                        "currentPage": {
+                            "pageNum": 1,
+                            "pageSize": 10
+                        },
+                        "isDynamic": false,
+                        "disabled": false,
+                        "defaultPageSize": 10,
+                        "align": "flex-end",
+                        "size": "default",
+                        "showSizeChanger": false,
+                        "pageSizeOptions": [
+                            "10",
+                            "20",
+                            "50",
+                            "100"
+                        ],
+                        "showQuickJumper": false,
+                        "hideOnSinglePage": false
+                    }
                 },
                 "inputAry": [],
-                "outputAry": [
-                    {
-                        "hostId": "u_tnenc9",
-                        "title": "点击事件",
-                        "schema": {
-                            "type": "any"
-                        }
-                    },
-                    {
-                        "hostId": "u_f81din",
-                        "title": "点击事件",
-                        "schema": {
-                            "type": "any"
-                        }
-                    },
-                    {
-                        "hostId": "u_tnenc9",
-                        "title": "点击事件",
-                        "schema": {
-                            "type": "any"
-                        }
-                    },
-                    {
-                        "hostId": "u_f81din",
-                        "title": "点击事件",
-                        "schema": {
-                            "type": "any"
-                        }
-                    }
-                ],
+                "outputAry": [],
                 "outputEvents": {},
                 "style": {
                     "display": "block",
-                    "left": 490,
-                    "top": 553,
+                    "left": 351,
+                    "top": 423,
                     "width": "100%"
                 }
             },
             "configs": [],
             "inputs": [
+                "dataSource",
+                "getTableData",
+                "startLoading",
+                "endLoading",
                 "show",
                 "hide",
                 "showOrHide"
             ],
             "outputs": [
-                "u_tnenc9",
-                "u_f81din"
+                "getTableData"
+            ]
+        },
+        "u_YqJGf": {
+            "def": {
+                "namespace": "mybricks.normal-pc.segment",
+                "version": "1.0.0",
+                "rtType": "js-autorun"
+            },
+            "title": "JS计算",
+            "model": {
+                "data": {
+                    "runImmediate": true,
+                    "fns": {
+                        "code": "(%7B%20outputs%20%7D)%20%3D%3E%20%7B%0A%20%20const%20%7B%20output0%20%7D%20%3D%20outputs%3B%0A%20%20output0(%5B%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%22name%22%3A%20%22ie4cMj%22%2C%0A%20%20%20%20%20%20%20%20%22email%22%3A%20%22r74eF2%22%0A%20%20%20%20%7D%2C%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%22name%22%3A%20%22Pjew3N%22%2C%0A%20%20%20%20%20%20%20%20%22email%22%3A%20%22YQKnfP%22%0A%20%20%20%20%7D%2C%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%22name%22%3A%20%22YDmphh%22%2C%0A%20%20%20%20%20%20%20%20%22email%22%3A%20%225YTATf%22%0A%20%20%20%20%7D%2C%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%22name%22%3A%20%22xiYKKh%22%2C%0A%20%20%20%20%20%20%20%20%22email%22%3A%20%22fDzaWG%22%0A%20%20%20%20%7D%2C%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%22name%22%3A%20%22cpM5wi%22%2C%0A%20%20%20%20%20%20%20%20%22email%22%3A%20%22EPi7jd%22%0A%20%20%20%20%7D%2C%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%22name%22%3A%20%22KNrMCS%22%2C%0A%20%20%20%20%20%20%20%20%22email%22%3A%20%22f6dGsZ%22%0A%20%20%20%20%7D%2C%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%22name%22%3A%20%22A2WFwD%22%2C%0A%20%20%20%20%20%20%20%20%22email%22%3A%20%22fckebh%22%0A%20%20%20%20%7D%2C%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%22name%22%3A%20%227FMTyX%22%2C%0A%20%20%20%20%20%20%20%20%22email%22%3A%20%22zn7RaC%22%0A%20%20%20%20%7D%2C%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%22name%22%3A%20%22PEHMA2%22%2C%0A%20%20%20%20%20%20%20%20%22email%22%3A%20%227tySBf%22%0A%20%20%20%20%7D%2C%0A%20%20%20%20%7B%0A%20%20%20%20%20%20%20%20%22name%22%3A%20%2278R5FW%22%2C%0A%20%20%20%20%20%20%20%20%22email%22%3A%20%22NsQ36J%22%0A%20%20%20%20%7D%0A%5D)%3B%0A%7D",
+                        "transformCode": "(function()%20%7B%20var%20_RTFN_%3B%20%0A%22use%20strict%22%3B%0A%0A_RTFN_%20%3D%20function%20_RTFN_(_ref)%20%7B%0A%20%20var%20outputs%20%3D%20_ref.outputs%3B%0A%20%20var%20output0%20%3D%20outputs.output0%3B%0A%20%20output0(%5B%7B%0A%20%20%20%20%22name%22%3A%20%22ie4cMj%22%2C%0A%20%20%20%20%22email%22%3A%20%22r74eF2%22%0A%20%20%7D%2C%20%7B%0A%20%20%20%20%22name%22%3A%20%22Pjew3N%22%2C%0A%20%20%20%20%22email%22%3A%20%22YQKnfP%22%0A%20%20%7D%2C%20%7B%0A%20%20%20%20%22name%22%3A%20%22YDmphh%22%2C%0A%20%20%20%20%22email%22%3A%20%225YTATf%22%0A%20%20%7D%2C%20%7B%0A%20%20%20%20%22name%22%3A%20%22xiYKKh%22%2C%0A%20%20%20%20%22email%22%3A%20%22fDzaWG%22%0A%20%20%7D%2C%20%7B%0A%20%20%20%20%22name%22%3A%20%22cpM5wi%22%2C%0A%20%20%20%20%22email%22%3A%20%22EPi7jd%22%0A%20%20%7D%2C%20%7B%0A%20%20%20%20%22name%22%3A%20%22KNrMCS%22%2C%0A%20%20%20%20%22email%22%3A%20%22f6dGsZ%22%0A%20%20%7D%2C%20%7B%0A%20%20%20%20%22name%22%3A%20%22A2WFwD%22%2C%0A%20%20%20%20%22email%22%3A%20%22fckebh%22%0A%20%20%7D%2C%20%7B%0A%20%20%20%20%22name%22%3A%20%227FMTyX%22%2C%0A%20%20%20%20%22email%22%3A%20%22zn7RaC%22%0A%20%20%7D%2C%20%7B%0A%20%20%20%20%22name%22%3A%20%22PEHMA2%22%2C%0A%20%20%20%20%22email%22%3A%20%227tySBf%22%0A%20%20%7D%2C%20%7B%0A%20%20%20%20%22name%22%3A%20%2278R5FW%22%2C%0A%20%20%20%20%22email%22%3A%20%22NsQ36J%22%0A%20%20%7D%5D)%3B%0A%7D%3B%0A%3B%20return%20_RTFN_%3B%20%7D)()"
+                    }
+                },
+                "inputAry": [],
+                "outputAry": [],
+                "outputEvents": {},
+                "style": {
+                    "display": "block"
+                }
+            },
+            "configs": [],
+            "inputs": [],
+            "outputs": [
+                "output0"
             ]
         }
     },
     "slot": {
         "comAry": [
             {
+                "id": "u_wmY3W",
                 "def": {
-                    "namespace": "mybricks.normal-pc.link",
+                    "namespace": "mybricks.normal-pc.table",
                     "version": "1.0.0"
-                }
-            },
-            {
-                "def": {
-                    "namespace": "mybricks.normal-pc.text",
-                    "version": "1.0.0"
-                }
-            },
-            {
-                "def": {
-                    "namespace": "mybricks.normal-pc.richtext-preview",
-                    "version": "1.0.0"
-                }
-            },
-            {
-                "def": {
-                    "namespace": "mybricks.normal-pc.toolbar",
-                    "version": "1.0.2"
-                }
-            },
-            {
-                "def": {
-                    "namespace": "mybricks.normal-pc.breadcrumb",
-                    "version": "1.0.0"
-                }
+                },
+                "slots": {}
             }
         ],
         "style": {
@@ -138,10 +158,40 @@
             "width": 1024
         }
     },
-    "comsAutoRun": {},
+    "comsAutoRun": {
+        "_rootFrame_": [
+            {
+                "id": "u_YqJGf",
+                "def": {
+                    "namespace": "mybricks.normal-pc.segment",
+                    "version": "1.0.0",
+                    "rtType": "js-autorun"
+                }
+            }
+        ]
+    },
     "inputs": [],
     "outputs": [],
-    "cons": {},
-    "pinRels": {},
+    "cons": {
+        "u_YqJGf-output0": [
+            {
+                "type": "com",
+                "finishPinParentKey": "u_sJKAB",
+                "comId": "u_wmY3W",
+                "def": {
+                    "namespace": "mybricks.normal-pc.table",
+                    "version": "1.0.0"
+                },
+                "pinId": "dataSource",
+                "pinType": "normal",
+                "direction": "input"
+            }
+        ]
+    },
+    "pinRels": {
+        "u_wmY3W-getTableData": [
+            "getTableData"
+        ]
+    },
     "pinProxies": {}
 }
