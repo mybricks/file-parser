@@ -126,11 +126,11 @@ export function toJSON({slot, frame}) {
         }
       })
 
-      if (cons.length > 0) {
+      if (cons.length >= 2) {
         let pinHostId
-        if(pin.from&&pin.from.hostId){//joint
+        if (pin.from && pin.from.hostId) {//joint
           pinHostId = pin.from.hostId
-        }else{
+        } else {
           pinHostId = pin.hostId
         }
 
