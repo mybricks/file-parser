@@ -97,12 +97,14 @@ export function toJSON({slot, frame}) {
           if (fp._type === 0) {//frame
             const forkedFromJointPin = realFPin.forkedAsJoint//joint
             if (forkedFromJointPin) {
+              const pinHostId = forkedFromJointPin.from?.hostId || forkedFromJointPin.hostId
+
               const con = {
                 type: 'frame',
                 frameId: fp.id,
-                comId: fp.parent ? fp.parent.runtime.id : void 0,
-                pinId: forkedFromJointPin.hostId,
-                pinType: forkedFromJointPin.type,
+                comId: fp.parent?.runtime.id,
+                pinId: pinHostId,
+                pinType: 'joint',
                 direction: forkedFromJointPin.direction
               }
 
@@ -112,6 +114,11 @@ export function toJSON({slot, frame}) {
 
               scanOutputPin(forkedFromJointPin, newIdPre)//scan for it
             } else {
+              // if (!realFPin.hostId) {
+              //   debugger
+              // }
+
+
               const comId = fp.parent?._type === 1 ? fp.parent.runtime.id : void 0//toplcom
               cons.push({
                 type: 'frame',
@@ -126,7 +133,7 @@ export function toJSON({slot, frame}) {
         }
       })
 
-      if (cons.length >= 2) {
+      if (cons.length > 0) {
         let pinHostId
         if (pin.from && pin.from.hostId) {//joint
           pinHostId = pin.from.hostId
