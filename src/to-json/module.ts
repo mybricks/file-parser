@@ -203,7 +203,7 @@ export function toJSON({slot, frame}) {
         comsReg[rt.id] = {
           def,
           frameId: frame.parent ? frame.id : void 0,
-          parentComId: frame.parent?.runtime.id,
+          parentComId: frame.parent?.runtime?.id,
           title: rt.title,
           model: rt.model,
           reservedEditorAry: geo ? geo.reservedEditorAry : void 0,
