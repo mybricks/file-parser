@@ -127,7 +127,18 @@ export function toJSON({slot, frame}) {
       })
 
       if (cons.length > 0) {
-        consReg[`${idPre}-${pin.hostId}`] = cons
+        let pinHostId
+        if(pin.from&&pin.from.hostId){//joint
+          pinHostId = pin.from.hostId
+        }else{
+          pinHostId = pin.hostId
+        }
+
+        // if(!pinHostId){
+        //   debugger
+        // }
+
+        consReg[`${idPre}-${pinHostId}`] = cons
       }
     }
   }
