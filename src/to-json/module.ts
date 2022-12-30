@@ -1,4 +1,5 @@
 import * as Arrays from '../utils/arrays'
+import pkg from '../../package.json'
 
 export function toJSON({slot, frame}) {
   let ui: { comAry, style }
@@ -333,6 +334,7 @@ export function toJSON({slot, frame}) {
   scanFrame(frame)
 
   return {
+    '-v': pkg.version,
     deps: depsReg,
     coms: comsReg,
     slot: ui,
