@@ -78,6 +78,12 @@ export function toJSON({slot, frame}) {
       const cons = []
       pin.conAry.forEach(con => {
         let frameKey
+
+        const fPin = con.finishPin
+        if (!fPin) {
+          return
+        }
+
         const frame = con.parent.parent
         if (frame) {//frame 可能不存在（对应的diagramModelparent为空)
           if (frame.parent) {
@@ -89,14 +95,10 @@ export function toJSON({slot, frame}) {
           } else {
             frameKey = `_rootFrame_`
           }
-        }else{
+        } else {
           debugger
         }
 
-        const fPin = con.finishPin
-        if (!fPin) {
-          return
-        }
 
         const pinParent = fPin.parent
         if (pinParent._type === 1) {//toplcom
