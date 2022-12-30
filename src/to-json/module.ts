@@ -4,6 +4,16 @@ export function toJSON({slot, frame}) {
   let ui: { comAry, style }
 
   const scanSlot = (slot) => {
+    // let sid
+    // if (slot.parent) {
+    //   sid = `${slot.parent.runtime.id}-${slot.id}`
+    // } else {
+    //   sid = slot.id
+    // }
+    // slotsReg[sid] = {
+    //   type: slot.type
+    // }
+
     if (slot.comAry) {
       const comAry = []
       slot.comAry.forEach(com => {
@@ -11,16 +21,16 @@ export function toJSON({slot, frame}) {
         if (com.slots) {
           slots = {}
           com.slots.forEach(slot => {
-            const comAry = scanSlot(slot)
-            if (comAry) {
-              slots[slot.id] = comAry
+            const slotDef = scanSlot(slot)
+            if (slotDef) {
+              slots[slot.id] = slotDef
             }
           })
         }
         comAry.push({id: com.runtime.id, def: com.runtime.def, slots})
       })
 
-      return {comAry, style: slot.style}
+      return {type: slot.type, comAry, style: slot.style}
     }
   }
 
@@ -36,6 +46,7 @@ export function toJSON({slot, frame}) {
   const pinRelsReg = {}
   const pinProxyReg = {}
   const consReg = {}
+  //const slotsReg = {}
   const comsReg = {}
   const comsAutoRun = {}
 
@@ -66,6 +77,22 @@ export function toJSON({slot, frame}) {
     if (pin.conAry) {
       const cons = []
       pin.conAry.forEach(con => {
+        let frameKey
+        const frame = con.parent.parent
+        if (frame) {//frame 可能不存在（对应的diagramModelparent为空)
+          if (frame.parent) {
+            if (frame.parent._type === 1) {
+              frameKey = `${frame.parent.runtime.id}-${frame.id}`
+            } else {
+              frameKey = `${frame.id}`
+            }
+          } else {
+            frameKey = `_rootFrame_`
+          }
+        }else{
+          debugger
+        }
+
         const fPin = con.finishPin
         if (!fPin) {
           return
@@ -81,6 +108,7 @@ export function toJSON({slot, frame}) {
 
           cons.push({
             type: 'com',
+            frameKey,
             startPinParentKey,
             finishPinParentKey,
             comId: realParentCom.runtime.id,
@@ -99,8 +127,12 @@ export function toJSON({slot, frame}) {
             if (forkedFromJointPin) {
               const pinHostId = forkedFromJointPin.from?.hostId || forkedFromJointPin.hostId
 
-              const con = {
+              const startPinParentKey = con.startPin.parent?._key
+
+              const nCon = {
                 type: 'frame',
+                frameKey,
+                startPinParentKey,
                 frameId: fp.id,
                 comId: fp.parent?.runtime.id,
                 pinId: pinHostId,
@@ -108,20 +140,22 @@ export function toJSON({slot, frame}) {
                 direction: forkedFromJointPin.direction
               }
 
-              cons.push(con)//{frameId, comId, pinId}
+              cons.push(nCon)//{frameId, comId, pinId}
 
-              const newIdPre = `${con.comId ? con.comId + '-' : ''}${con.frameId}`
+              const newIdPre = `${nCon.comId ? nCon.comId + '-' : ''}${nCon.frameId}`
 
               scanOutputPin(forkedFromJointPin, newIdPre)//scan for it
             } else {
               // if (!realFPin.hostId) {
               //   debugger
               // }
-
+              const startPinParentKey = con.startPin.parent?._key
 
               const comId = fp.parent?._type === 1 ? fp.parent.runtime.id : void 0//toplcom
               cons.push({
                 type: 'frame',
+                frameKey,
+                startPinParentKey,
                 frameId: fp.id,
                 comId,
                 pinId: realFPin.hostId,
@@ -258,7 +292,17 @@ export function toJSON({slot, frame}) {
         // }
 
         if (rt._autoRun && def.rtType?.match(/^js/)) {
-          const idPre = frame.parent ? `${frame.parent.runtime.id}-${frame.id}` : '_rootFrame_'
+          let idPre
+          if (frame.parent) {
+            if (frame.parent.runtime) {
+              idPre = `${frame.parent.runtime.id}-${frame.id}`
+            } else {
+              idPre = frame.id
+            }
+          } else {
+            idPre = '_rootFrame_'
+          }
+          //const idPre = frame.parent ? `${frame.parent.runtime.id}-${frame.id}` : '_rootFrame_'
           let ary = comsAutoRun[idPre]
           if (!ary) {
             ary = comsAutoRun[idPre] = []
@@ -290,6 +334,7 @@ export function toJSON({slot, frame}) {
     deps: depsReg,
     coms: comsReg,
     slot: ui,
+    //slotsReg,
     comsAutoRun,
     inputs: inputsReg,
     outputs: outputsReg,
