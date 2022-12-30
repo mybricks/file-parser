@@ -14,3 +14,5 @@ tags/*
 app/
 _pub/
 package-lock.json
+_test/content.json
+_test/result.json
