@@ -2,7 +2,7 @@ import * as Arrays from '../utils/arrays'
 import pkg from '../../package.json'
 
 export function toJSON({slot, frame}) {
-  let ui: { comAry, style }
+  let ui: { title, comAry, style }
 
   const scanSlot = (slot) => {
     // let sid
@@ -28,10 +28,17 @@ export function toJSON({slot, frame}) {
             }
           })
         }
+
         comAry.push({id: com.runtime.id, def: com.runtime.def, slots})
       })
 
-      return {type: slot.type, comAry, style: slot.style}
+      return {
+        id: slot.id,
+        type: slot.type,
+        title: slot.title,
+        comAry,
+        style: slot.style
+      }
     }
   }
 
@@ -40,6 +47,9 @@ export function toJSON({slot, frame}) {
   //-------------------------------------------------------------------------
 
   const depsReg = []
+
+  const _inputsReg = []
+  const _outputsReg = []
 
   const inputsReg = []
   const outputsReg = []
@@ -188,6 +198,33 @@ export function toJSON({slot, frame}) {
   }
 
   const scanFrame = (frame) => {
+    if (frame._inputPins) {
+      frame._inputPins.forEach(pin => {
+        let idPre
+        if (frame.parent && frame.parent._type === 1) {//toplcom
+          idPre = `${frame.parent.runtime.id}-${frame.id}`
+        } else if (frame.parent) {
+          idPre = frame.id
+        } else {
+          idPre = '_rootFrame_'//_rootFrame_
+        }
+
+        scanOutputPin(pin, idPre)
+
+        scanInputPin(pin, idPre)//scan rels
+
+        if (!frame.parent) {//root
+          _inputsReg.push({
+            id: pin.hostId,
+            title: pin.title,
+            type: pin.type,
+            schema: pin.schema,
+            extValues: pin.extValues
+          })
+        }
+      })
+    }
+
     if (frame.inputPins) {
       frame.inputPins.forEach(pin => {
         let idPre
@@ -215,6 +252,19 @@ export function toJSON({slot, frame}) {
       })
     }
 
+    if (frame._outputPins) {
+      frame._outputPins.forEach(pin => {
+        if (!frame.parent) {//root
+          _outputsReg.push({
+            id: pin.hostId,
+            title: pin.title,
+            type: pin.type,
+            schema: pin.schema
+          })
+        }
+      })
+    }
+
     if (frame.outputPins) {
       frame.outputPins.forEach(pin => {
         if (!frame.parent) {//root
@@ -224,6 +274,11 @@ export function toJSON({slot, frame}) {
             type: pin.type,
             schema: pin.schema
           })
+        }
+
+        if(pin.type==='event'){
+          let idPre = '_rootFrame_'//_rootFrame_
+          scanOutputPin(pin, idPre)
         }
       })
     }
@@ -331,15 +386,21 @@ export function toJSON({slot, frame}) {
     }
   }
 
-  scanFrame(frame)
+  if (frame) {
+    scanFrame(frame)
+  }
 
   return {
     '-v': pkg.version,
+    id: ui.id,
+    title: ui.title,
     deps: depsReg,
     coms: comsReg,
     slot: ui,
     //slotsReg,
     comsAutoRun,
+    _inputs: _inputsReg,
+    _outputs: _outputsReg,
     inputs: inputsReg,
     outputs: outputsReg,
     cons: consReg,
