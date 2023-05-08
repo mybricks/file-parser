@@ -4,6 +4,9 @@ import pkg from '../../package.json'
 export function toJSON({slot, frame}) {
   let ui: { title, comAry, style }
 
+  const depsReg = []
+  const comsReg = {}
+
   const scanSlot = (slot) => {
     // let sid
     // if (slot.parent) {
@@ -18,6 +21,20 @@ export function toJSON({slot, frame}) {
     if (slot.comAry) {
       const comAry = []
       slot.comAry.forEach(com => {
+        if (!frame) {//没有toplview的情况
+          const rt = com.runtime
+          const def = rt.def
+          if (!depsReg.find(now => now.namespace === def.namespace && now.version === def.version)) {
+            depsReg.push(def)
+          }
+
+          comsReg[rt.id] = {
+            def,
+            title: rt.title,
+            model: rt.model
+          }
+        }
+
         let slots
         if (com.slots) {
           slots = {}
@@ -46,8 +63,6 @@ export function toJSON({slot, frame}) {
 
   //-------------------------------------------------------------------------
 
-  const depsReg = []
-
   const _inputsReg = []
   const _outputsReg = []
 
@@ -56,9 +71,10 @@ export function toJSON({slot, frame}) {
 
   const pinRelsReg = {}
   const pinProxyReg = {}
+  const pinValueProxyReg = {}
   const consReg = {}
   //const slotsReg = {}
-  const comsReg = {}
+
   const comsAutoRun = {}
 
   const scanInputPin = (pin, idPre) => {
@@ -82,9 +98,39 @@ export function toJSON({slot, frame}) {
         }
       }
     }
+
+    if (pin.proxyPinValue) {
+      const comOrFrame = pin.proxyPinValue.parent
+      if (comOrFrame._type === 0) {//frame
+        const frameId = comOrFrame.id
+
+        pinValueProxyReg[`${idPre}-${pin.hostId}`] = {
+          type: 'frame',
+          frameId,
+          pinId: pin.proxyPinValue.hostId
+        }
+      }
+    }
   }
 
   const scanOutputPin = (pin, idPre) => {
+    if (pin.proxyPin) {////TODO
+      const comOrFrame = pin.proxyPin.parent
+      if (comOrFrame._type === 0) {//frame
+        const frameId = comOrFrame.id
+
+        if (comOrFrame) {
+
+        }
+
+        pinProxyReg[`${idPre}-${pin.hostId}`] = {
+          type: 'frame',
+          frameId,
+          pinId: pin.proxyPin.hostId
+        }
+      }
+    }
+
     if (pin.conAry) {
       const cons = []
       pin.conAry.forEach(con => {
@@ -276,7 +322,7 @@ export function toJSON({slot, frame}) {
           })
         }
 
-        if(pin.type==='event'){
+        if (pin.type === 'event') {
           let idPre = '_rootFrame_'//_rootFrame_
           scanOutputPin(pin, idPre)
         }
@@ -344,7 +390,8 @@ export function toJSON({slot, frame}) {
             outPinIdAry.push(pin.hostId)
           }, com.outputPins,
           com.outputPinsInModel,
-          com.outputPinExts)
+          com.outputPinExts,
+          com.outputPinNexts)
         // if (com.runtime.def.rtType === 'js') {
         //
         // }
@@ -406,5 +453,6 @@ export function toJSON({slot, frame}) {
     cons: consReg,
     pinRels: pinRelsReg,
     pinProxies: pinProxyReg,
+    pinValueProxies: pinValueProxyReg,
   }
 }
