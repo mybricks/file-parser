@@ -30,6 +30,7 @@ export function toJSON({slot, frame}) {
 
           comsReg[rt.id] = {
             def,
+            name:com.name,
             title: rt.title,
             model: rt.model
           }
@@ -46,7 +47,11 @@ export function toJSON({slot, frame}) {
           })
         }
 
-        comAry.push({id: com.runtime.id, def: com.runtime.def, slots})
+        comAry.push({
+          id: com.runtime.id,
+          name:com.name,
+          def: com.runtime.def, slots
+        })
       })
 
       return {
