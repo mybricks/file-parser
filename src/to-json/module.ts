@@ -6,7 +6,6 @@ export function toJSON({slot, frame}) {
 
   const depsReg = []
   const comsReg = {}
-  const globalComsReg = {}
 
   const scanSlot = (slot) => {
     // let sid
@@ -123,6 +122,7 @@ export function toJSON({slot, frame}) {
     // if(pin.title==='打开'){
     //   debugger
     // }
+
 
     if (pin.proxyPin) {////TODO
       const comOrFrame = pin.proxyPin.parent
