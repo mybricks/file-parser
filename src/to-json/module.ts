@@ -1,11 +1,35 @@
 import * as Arrays from '../utils/arrays'
 import pkg from '../../package.json'
 
-export function toJSON({slot, frame}) {
-  let ui: { title, comAry, style }
-
+export function toJSON({slot, frame},needClone?) {
   const depsReg = []
   const comsReg = {}
+
+  let slotJSON
+  if (slot) {
+    slotJSON = toSlotJSON(slot, {depsReg, comsReg}, frame, needClone)
+  }
+
+  let frameJSON
+  if (frame) {
+    frameJSON = toFrameJSON(frame, {depsReg, comsReg}, needClone)
+  }
+
+  return Object.assign({
+      '-v': pkg.version,
+      deps: depsReg,
+      coms: comsReg,
+    }, frameJSON || {},
+    slotJSON ? {
+      id: slotJSON.id,
+      title: slotJSON.title,
+      slot: slotJSON
+    } : {}
+  )
+}
+
+export function toSlotJSON(slot, {depsReg, comsReg}, frame?, needClone?) {
+  let ui: { id, title, type, comAry, style }
 
   const scanSlot = (slot) => {
     // let sid
@@ -28,11 +52,14 @@ export function toJSON({slot, frame}) {
             depsReg.push(def)
           }
 
+          const model = needClone ? JSON.parse(JSON.stringify(rt.model)) : rt.model
+
           comsReg[rt.id] = {
+            id: rt.id,
             def,
-            name:com.name,
+            name: com.name,
             title: rt.title,
-            model: rt.model
+            model
           }
         }
 
@@ -49,24 +76,32 @@ export function toJSON({slot, frame}) {
 
         comAry.push({
           id: com.runtime.id,
-          name:com.name,
+          name: com.name,
           def: com.runtime.def, slots
         })
       })
 
       return {
         id: slot.id,
-        type: slot.type,
         title: slot.title,
+        type: slot.type,
+        showType:slot.showType,
         comAry,
         style: slot.style
       }
     }
   }
 
-  ui = scanSlot(slot)
+  if (slot) {
+    ui = scanSlot(slot)
+  }
 
-  //-------------------------------------------------------------------------
+  return ui
+}
+
+export function toFrameJSON(frame, regs?: { depsReg, comsReg }, needClone?) {
+  const depsReg = regs?.depsReg || []
+  const comsReg = regs?.comsReg || {}
 
   const _inputsReg = []
   const _outputsReg = []
@@ -123,7 +158,6 @@ export function toJSON({slot, frame}) {
     //   debugger
     // }
 
-
     if (pin.proxyPin) {////TODO
       const comOrFrame = pin.proxyPin.parent
       if (comOrFrame._type === 0) {//frame
@@ -176,6 +210,7 @@ export function toJSON({slot, frame}) {
           const finishPinParentKey = con.finishPin.parent._key
 
           cons.push({
+            id:con.id,
             type: 'com',
             frameKey,
             startPinParentKey,
@@ -199,6 +234,7 @@ export function toJSON({slot, frame}) {
               const startPinParentKey = con.startPin.parent?._key
 
               const nCon = {
+                id:con.id,
                 type: 'frame',
                 frameKey,
                 startPinParentKey,
@@ -222,6 +258,7 @@ export function toJSON({slot, frame}) {
 
               const comId = fp.parent?._type === 1 ? fp.parent.runtime.id : void 0//toplcom
               cons.push({
+                id:con.id,
                 type: 'frame',
                 frameKey,
                 startPinParentKey,
@@ -361,19 +398,24 @@ export function toJSON({slot, frame}) {
         }
 
         const configPinIdAry = []
+        const _inputPinIdAry = []
         const inputPinIdAry = []
         const outPinIdAry = []
 
         const geo = rt.geo
 
+        const model = needClone ? JSON.parse(JSON.stringify(rt.model)) : rt.model
+
         comsReg[rt.id] = {
+          id:rt.id,
           def,
           frameId: frame.parent ? frame.id : void 0,
           parentComId: frame.parent?.runtime?.id,
           title: rt.title,
-          model: rt.model,
+          model,
           reservedEditorAry: geo ? geo.reservedEditorAry : void 0,
           configs: configPinIdAry,
+          _inputs: _inputPinIdAry,
           inputs: inputPinIdAry,
           outputs: outPinIdAry
         }
@@ -389,8 +431,15 @@ export function toJSON({slot, frame}) {
 
         Arrays.each(pin => {
             scanInputPin(pin, rt.id)
+            _inputPinIdAry.push(pin.hostId)
+          }, com._inputPins
+        )
+
+        Arrays.each(pin => {
+            scanInputPin(pin, rt.id)
             inputPinIdAry.push(pin.hostId)
-          }, com.inputPins,
+          },
+          com.inputPins,
           com.inputPinsInModel,
           com.inputPinExts,
         )
@@ -398,7 +447,8 @@ export function toJSON({slot, frame}) {
         Arrays.each(pin => {
             scanOutputPin(pin, rt.id)
             outPinIdAry.push(pin.hostId)
-          }, com.outputPins,
+          },
+          com.outputPins,
           com.outputPinsInModel,
           com.outputPinExts,
           com.outputPinNexts)
@@ -449,12 +499,11 @@ export function toJSON({slot, frame}) {
 
   return {
     '-v': pkg.version,
-    id: ui.id,
-    title: ui.title,
-    deps: depsReg,
-    coms: comsReg,
-    slot: ui,
-    //slotsReg,
+    id: frame.id,
+    title: frame.title,
+    type:frame.type,
+    deps:depsReg,
+    coms:comsReg,
     comsAutoRun,
     _inputs: _inputsReg,
     _outputs: _outputsReg,

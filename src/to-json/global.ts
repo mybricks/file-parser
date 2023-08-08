@@ -1,8 +1,18 @@
 import * as Arrays from "../utils/arrays";
+import {toFrameJSON, toJSON as toModuleJSON} from './module'
 
-export function toJSON(toplViewModel) {
+export function toJSON(toplViewModel, needClone?) {
   const comsReg = {}
   const consReg = {}
+  const pinRelsReg = {}
+
+  const fxFrames = []
+
+  const scanInputPin = (pin, idPre) => {
+    if (pin.rels) {
+      pinRelsReg[`${idPre}-${pin.hostId}`] = pin.rels
+    }
+  }
 
   const scanOutputPin = (pin, idPre) => {
     // if(pin.title==='打开'){
@@ -121,7 +131,7 @@ export function toJSON(toplViewModel) {
     }
   }
 
-  if (toplViewModel.varComAry) {
+  if (toplViewModel.varComAry) {//全局变量
     toplViewModel.varComAry.forEach(com => {
       const rt = com.runtime
       const def = rt.def
@@ -132,10 +142,12 @@ export function toJSON(toplViewModel) {
 
       const geo = rt.geo
 
+      const model = needClone ? JSON.parse(JSON.stringify(rt.model)) : rt.model
+
       comsReg[rt.id] = {
         def,
         title: rt.title,
-        model: rt.model,
+        model,
         reservedEditorAry: geo ? geo.reservedEditorAry : void 0,
         configs: configPinIdAry,
         inputs: inputPinIdAry,
@@ -146,6 +158,7 @@ export function toJSON(toplViewModel) {
       // }
 
       Arrays.each(pin => {
+          scanInputPin(pin, rt.id)
           inputPinIdAry.push(pin.hostId)
         }, com.inputPins,
         com.inputPinsInModel,
@@ -165,7 +178,16 @@ export function toJSON(toplViewModel) {
     })
   }
 
+  if (toplViewModel.frames) {//全局Fx
+    toplViewModel.frames.forEach(frame => {
+      if (frame.type === 'fx') {
+        const frameJSON = toFrameJSON(frame,void 0,needClone)
+        fxFrames.push(frameJSON)
+      }
+    })
+  }
+
   return {
-    comsReg, consReg
+    comsReg, consReg, pinRels: pinRelsReg, fxFrames
   }
 }
