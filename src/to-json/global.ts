@@ -54,6 +54,7 @@ export function toJSON(toplViewModel, needClone?) {
           const finishPinParentKey = con.finishPin.parent._key
 
           cons.push({
+            id:con.id,
             type: 'com',
             frameKey,
             startPinParentKey,
@@ -63,7 +64,8 @@ export function toJSON(toplViewModel, needClone?) {
             pinId: realFPin.hostId,
             pinType: realFPin.type,
             direction: realFPin.direction,
-            extBinding: realFPin.extBinding
+            extBinding: realFPin.extBinding,
+            isIgnored:con.isIgnored
           })
         } else {
           const realFPin = fPin.forkedFrom || fPin
@@ -77,6 +79,7 @@ export function toJSON(toplViewModel, needClone?) {
               const startPinParentKey = con.startPin.parent?._key
 
               const nCon = {
+                id:con.id,
                 type: 'frame',
                 frameKey,
                 startPinParentKey,
@@ -84,7 +87,8 @@ export function toJSON(toplViewModel, needClone?) {
                 comId: fp.parent?.runtime.id,
                 pinId: pinHostId,
                 pinType: 'joint',
-                direction: forkedFromJointPin.direction
+                direction: forkedFromJointPin.direction,
+                isIgnored:con.isIgnored
               }
 
               cons.push(nCon)//{frameId, comId, pinId}
@@ -100,6 +104,7 @@ export function toJSON(toplViewModel, needClone?) {
 
               const comId = fp.parent?._type === 1 ? fp.parent.runtime.id : void 0//toplcom
               cons.push({
+                id:con.id,
                 type: 'frame',
                 frameKey,
                 startPinParentKey,
@@ -107,7 +112,8 @@ export function toJSON(toplViewModel, needClone?) {
                 comId,
                 pinId: realFPin.hostId,
                 pinType: realFPin.type,
-                direction: realFPin.direction
+                direction: realFPin.direction,
+                isIgnored:con.isIgnored
               })//{frameId, comId, pinId}
             }
           }
@@ -145,6 +151,7 @@ export function toJSON(toplViewModel, needClone?) {
       const model = needClone ? JSON.parse(JSON.stringify(rt.model)) : rt.model
 
       comsReg[rt.id] = {
+        id:rt.id,
         def,
         title: rt.title,
         model,

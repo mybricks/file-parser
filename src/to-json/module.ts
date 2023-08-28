@@ -122,6 +122,15 @@ export function toFrameJSON(frame, regs?: { depsReg, comsReg }, needClone?) {
       pinRelsReg[`${idPre}-${pin.hostId}`] = pin.rels
     }
 
+    if(pin.proxyScenePin){
+      const {sceneId,hostId} = pin.proxyScenePin
+      pinProxyReg[`${idPre}-${pin.hostId}`] = {
+        type: 'frame',
+        frameId:sceneId,
+        pinId: hostId
+      }
+    }
+
     if (pin.proxyPin) {
       const comOrFrame = pin.proxyPin.parent
       if (comOrFrame._type === 0) {//frame
@@ -220,7 +229,8 @@ export function toFrameJSON(frame, regs?: { depsReg, comsReg }, needClone?) {
             pinId: realFPin.hostId,
             pinType: realFPin.type,
             direction: realFPin.direction,
-            extBinding: realFPin.extBinding
+            extBinding: realFPin.extBinding,
+            isIgnored:con.isIgnored
           })
         } else {
           const realFPin = fPin.forkedFrom || fPin
@@ -242,7 +252,8 @@ export function toFrameJSON(frame, regs?: { depsReg, comsReg }, needClone?) {
                 comId: fp.parent?.runtime.id,
                 pinId: pinHostId,
                 pinType: 'joint',
-                direction: forkedFromJointPin.direction
+                direction: forkedFromJointPin.direction,
+                isIgnored:con.isIgnored
               }
 
               cons.push(nCon)//{frameId, comId, pinId}
@@ -266,7 +277,8 @@ export function toFrameJSON(frame, regs?: { depsReg, comsReg }, needClone?) {
                 comId,
                 pinId: realFPin.hostId,
                 pinType: realFPin.type,
-                direction: realFPin.direction
+                direction: realFPin.direction,
+                isIgnored:con.isIgnored
               })//{frameId, comId, pinId}
             }
           }
