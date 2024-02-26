@@ -6,3 +6,5 @@ export const META_HASHCODE = '_hc_'
 
 
 export const META_IGNORE = '_ignore_'
+
+export const TEMP_MERGEDATA = '_merge_data_'

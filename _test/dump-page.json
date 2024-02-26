@@ -1,0 +1,1574 @@
+{
+  "id": "main",
+  "title": "首页",
+  "content": {
+    "D": {
+      "C": [
+        "xg.desn.sdk.ModelState",
+        "xg.desn.sdk.ComStyle",
+        "xg.desn.designer.stageview.topl.PinModel",
+        "xg.desn.sdk.ComRuntimeModel",
+        "xg.desn.designer.stageview.topl.ToplComModel",
+        "xg.desn.designer.stageview.topl.DiagramModel",
+        "xg.desn.designer.stageview.topl.ToplComModelForked",
+        "xg.desn.designer.stageview.topl.PinModelForked",
+        "xg.desn.designer.stageview.topl.ConModel",
+        "xg.desn.designer.stageview.geo.GeoComModel",
+        "xg.desn.designer.stageview.geo.SlotStyleModel",
+        "xg.desn.designer.stageview.geo.SlotModel",
+        "xg.desn.designer.stageview.topl.FrameModel"
+      ]
+    },
+    "refs": {
+      "ModelState_NQ8fX": {
+        "_F_": 0
+      },
+      "ModelState_6__BN": {
+        "_F_": 0
+      },
+      "ComStyle_serfH": {
+        "display": "block",
+        "width": "100%",
+        "_F_": 1
+      },
+      "ModelState__P2KG": {
+        "_F_": 0
+      },
+      "ModelState_TXyd7": {
+        "_F_": 0
+      },
+      "ModelState_8YV6m": {
+        "_F_": 0
+      },
+      "PinModel_54153": {
+        "id": "u_OeNmC",
+        "state": {
+          "_R_": "ModelState_8YV6m"
+        },
+        "zIndex": 0,
+        "_type": 2,
+        "type": "normal",
+        "deletable": false,
+        "conAry": [],
+        "direction": "inner-output",
+        "hostId": "open",
+        "title": "打开",
+        "_schema": {
+          "type": "any"
+        },
+        "editable": true,
+        "parent": {
+          "_R_": "FrameModel_tjDli"
+        },
+        "schema": {
+          "type": "any"
+        },
+        "_F_": 2
+      },
+      "ModelState_qF3fD": {
+        "_F_": 0
+      },
+      "PinModel_glQDO": {
+        "id": "onShow",
+        "state": {
+          "_R_": "ModelState_qF3fD"
+        },
+        "zIndex": 0,
+        "_type": 2,
+        "type": "event",
+        "deletable": false,
+        "conAry": [],
+        "direction": "inner-input",
+        "hostId": "onShow",
+        "title": "页面显示",
+        "_schema": {
+          "type": "any"
+        },
+        "parent": {
+          "_R_": "FrameModel_tjDli"
+        },
+        "schema": {
+          "type": "any"
+        },
+        "_F_": 2
+      },
+      "ModelState_pH4Uw": {
+        "_F_": 0
+      },
+      "PinModel_RrFrO": {
+        "id": "onHide",
+        "state": {
+          "_R_": "ModelState_pH4Uw"
+        },
+        "zIndex": 0,
+        "_type": 2,
+        "type": "event",
+        "deletable": false,
+        "conAry": [],
+        "direction": "inner-input",
+        "hostId": "onHide",
+        "title": "页面隐藏",
+        "_schema": {
+          "type": "any"
+        },
+        "parent": {
+          "_R_": "FrameModel_tjDli"
+        },
+        "schema": {
+          "type": "any"
+        },
+        "_F_": 2
+      },
+      "ModelState__VH9P": {
+        "_F_": 0
+      },
+      "ModelState_eEIvw": {
+        "_F_": 0
+      },
+      "PinModel_0HX48": {
+        "id": "u_BqTeW",
+        "state": {
+          "_R_": "ModelState_eEIvw"
+        },
+        "zIndex": 0,
+        "_type": 2,
+        "type": "normal",
+        "deletable": false,
+        "conAry": [],
+        "direction": "input",
+        "hostId": "buttonText",
+        "title": "修改按钮文本",
+        "_schema": {
+          "type": "string"
+        },
+        "parent": {
+          "_R_": "ToplComModel_DXIIp"
+        },
+        "schema": {
+          "type": "string"
+        },
+        "_F_": 2
+      },
+      "ModelState_YjCZd": {
+        "_F_": 0
+      },
+      "PinModel_X3ZiU": {
+        "id": "u_mmnye",
+        "state": {
+          "_R_": "ModelState_YjCZd"
+        },
+        "zIndex": 0,
+        "_type": 2,
+        "type": "ext",
+        "deletable": false,
+        "conAry": [],
+        "direction": "input",
+        "hostId": "show",
+        "title": "显示",
+        "_schema": {
+          "type": "any"
+        },
+        "parent": {
+          "_R_": "ToplComModel_DXIIp"
+        },
+        "schema": {
+          "type": "any"
+        },
+        "_F_": 2
+      },
+      "ModelState_ooUXL": {
+        "_F_": 0
+      },
+      "PinModel_iEhU_": {
+        "id": "u_Pi3eo",
+        "state": {
+          "_R_": "ModelState_ooUXL"
+        },
+        "zIndex": 0,
+        "_type": 2,
+        "type": "ext",
+        "deletable": false,
+        "conAry": [],
+        "direction": "input",
+        "hostId": "hide",
+        "title": "隐藏",
+        "_schema": {
+          "type": "any"
+        },
+        "parent": {
+          "_R_": "ToplComModel_DXIIp"
+        },
+        "schema": {
+          "type": "any"
+        },
+        "_F_": 2
+      },
+      "ModelState_o553L": {
+        "_F_": 0
+      },
+      "PinModel_9fRc0": {
+        "id": "u__k6oc",
+        "state": {
+          "_R_": "ModelState_o553L"
+        },
+        "zIndex": 0,
+        "_type": 2,
+        "type": "ext",
+        "deletable": false,
+        "conAry": [],
+        "direction": "input",
+        "hostId": "showOrHide",
+        "title": "显示/隐藏",
+        "_schema": {
+          "type": "any"
+        },
+        "parent": {
+          "_R_": "ToplComModel_DXIIp"
+        },
+        "schema": {
+          "type": "any"
+        },
+        "_F_": 2
+      },
+      "ModelState_P_hcL": {
+        "_F_": 0
+      },
+      "ModelState_IEFz8": {
+        "_F_": 0
+      },
+      "ModelState_8aLxP": {
+        "_F_": 0
+      },
+      "ModelState_WYh8o": {
+        "_F_": 0
+      },
+      "ModelState_DWJYJ": {
+        "_F_": 0
+      },
+      "ModelState_wpwvi": {
+        "_F_": 0
+      },
+      "ModelState_JJQV2": {
+        "_F_": 0
+      },
+      "PinModel_sIRXi": {
+        "id": "u_xtU52",
+        "state": {
+          "_R_": "ModelState_JJQV2"
+        },
+        "zIndex": 0,
+        "_type": 2,
+        "type": "normal",
+        "deletable": false,
+        "conAry": [],
+        "isPrivate": true,
+        "direction": "input",
+        "hostId": "_open",
+        "title": "打开",
+        "_schema": {
+          "type": "object",
+          "editable": true
+        },
+        "_schemaEditable": true,
+        "parent": {
+          "_R_": "ToplComModel_02Qao"
+        },
+        "proxyPin": {
+          "_todo_": true,
+          "pinId": "u_3TC7B",
+          "frameId": "u_ER9if"
+        },
+        "schema": {
+          "type": "object",
+          "editable": true
+        },
+        "_F_": 2
+      },
+      "ModelState_r3pQo": {
+        "_F_": 0
+      },
+      "PinModel_eOXYW": {
+        "id": "u_PDL5f",
+        "state": {
+          "_R_": "ModelState_r3pQo"
+        },
+        "zIndex": 0,
+        "_type": 2,
+        "type": "normal",
+        "deletable": false,
+        "conAry": [
+          {
+            "_R_": "ConModel_PERVi"
+          }
+        ],
+        "direction": "input",
+        "hostId": "open",
+        "title": "打开",
+        "_schema": {
+          "type": "object",
+          "editable": true
+        },
+        "parent": {
+          "_R_": "ToplComModel_02Qao"
+        },
+        "schema": {
+          "type": "object",
+          "editable": true
+        },
+        "_F_": 2
+      },
+      "ComStyle_V_GGd": {
+        "display": "block",
+        "_F_": 1
+      },
+      "ComRuntimeModel_jZAcI": {
+        "id": "u_CgKJA",
+        "model": {
+          "data": {
+            "_sceneId": "u_ER9if",
+            "openType": "blank"
+          },
+          "inputAry": [],
+          "outputAry": [],
+          "outputEvents": {},
+          "style": {
+            "_R_": "ComStyle_V_GGd"
+          }
+        },
+        "title": "小程序页面3",
+        "refId": "scenes_kUQ",
+        "def": {
+          "namespace": "mybricks.core-comlib.scenes",
+          "version": "1.0.0",
+          "rtType": "js"
+        },
+        "topl": {
+          "_R_": "ToplComModel_02Qao"
+        },
+        "_F_": 3
+      },
+      "ToplComModel_02Qao": {
+        "state": {
+          "_R_": "ModelState_wpwvi"
+        },
+        "_type": 1,
+        "init": false,
+        "style": {
+          "left": 207,
+          "top": 54
+        },
+        "foldedStyle": {},
+        "configPins": [],
+        "_inputPins": [
+          {
+            "_R_": "PinModel_sIRXi"
+          }
+        ],
+        "inputPins": [
+          {
+            "_R_": "PinModel_eOXYW"
+          }
+        ],
+        "inputPinsInModel": [],
+        "inputPinExts": [],
+        "_outputPins": [],
+        "outputPins": [],
+        "outputPinsInModel": [],
+        "outputPinExts": [],
+        "outputPinNexts": [],
+        "name": "u_iaOmB",
+        "runtime": {
+          "_R_": "ComRuntimeModel_jZAcI"
+        },
+        "description": "（新页面）",
+        "ioProxyForCall": {
+          "_todo_": true,
+          "_inputs": {
+            "_open": "open"
+          }
+        },
+        "diagramModel": {
+          "_R_": "DiagramModel_uL7yF"
+        },
+        "parent": {
+          "_R_": "FrameModel_tjDli"
+        },
+        "_F_": 4
+      },
+      "DiagramModel_uL7yF": {
+        "id": "u_y1q8L",
+        "state": {
+          "_R_": "ModelState_DWJYJ"
+        },
+        "comAry": [
+          {
+            "_R_": "ToplComModelForked_5GYIm"
+          },
+          {
+            "_R_": "ToplComModel_02Qao"
+          }
+        ],
+        "outputPins": [],
+        "outputJoints": [],
+        "conAry": [
+          {
+            "_R_": "ConModel_PERVi"
+          }
+        ],
+        "commentAry": [],
+        "style": {
+          "visible": false,
+          "left": null,
+          "top": 450,
+          "height": 400,
+          "width": 700
+        },
+        "parent": {
+          "_R_": "FrameModel_tjDli"
+        },
+        "startWithCom": {
+          "_R_": "ToplComModelForked_5GYIm"
+        },
+        "_title": "按钮 > 点击",
+        "createTime": 1691653469704,
+        "updateTime": 1691724185194,
+        "title": "按钮 > 点击",
+        "_F_": 5
+      },
+      "ToplComModelForked_5GYIm": {
+        "state": {
+          "_R_": "ModelState_WYh8o"
+        },
+        "_type": 1,
+        "init": false,
+        "style": {
+          "left": 50,
+          "top": 26
+        },
+        "foldedStyle": {},
+        "configPins": [],
+        "_inputPins": [],
+        "inputPins": [],
+        "inputPinsInModel": [],
+        "inputPinExts": [],
+        "_outputPins": [],
+        "outputPins": [
+          {
+            "_R_": "PinModelForked_N6SQG"
+          }
+        ],
+        "outputPinsInModel": [],
+        "outputPinExts": [],
+        "outputPinNexts": [],
+        "parent": {
+          "_R_": "DiagramModel_uL7yF"
+        },
+        "forkedFrom": {
+          "_R_": "ToplComModel_DXIIp"
+        },
+        "ioc": {
+          "configs": {},
+          "inputs": {},
+          "outputs": {
+            "onClick": true
+          }
+        },
+        "diagramModel": {
+          "_R_": "DiagramModel_uL7yF"
+        },
+        "_startInDiagram": true,
+        "_key": "u__f8vM",
+        "_F_": 6
+      },
+      "PinModelForked_N6SQG": {
+        "id": "u_8eaSc",
+        "state": {
+          "_R_": "ModelState_8aLxP"
+        },
+        "zIndex": 0,
+        "_type": 2,
+        "deletable": false,
+        "conAry": [
+          {
+            "_R_": "ConModel_PERVi"
+          }
+        ],
+        "parent": {
+          "_R_": "ToplComModelForked_5GYIm"
+        },
+        "forkedFrom": {
+          "_R_": "PinModel_A6iO1"
+        },
+        "title": "点击",
+        "schema": {
+          "type": "unknown"
+        },
+        "_F_": 7
+      },
+      "ConModel_PERVi": {
+        "id": "u_gQqNS",
+        "state": {
+          "_R_": "ModelState_IEFz8"
+        },
+        "zIndex": 0,
+        "_type": 4,
+        "_ing": false,
+        "commentAry": [],
+        "startPin": {
+          "_R_": "PinModelForked_N6SQG"
+        },
+        "_startPo": {
+          "j": 35.6,
+          "x": 60,
+          "y": 50.5
+        },
+        "finishPin": {
+          "_R_": "PinModel_eOXYW"
+        },
+        "title": "从 点击 到 打开 的连接",
+        "parent": {
+          "_R_": "DiagramModel_uL7yF"
+        },
+        "errorInfo": "Error schema",
+        "startPo": {
+          "j": 35.6,
+          "x": 60,
+          "y": 50.5
+        },
+        "finishPo": {
+          "j": 35.6,
+          "x": 197,
+          "y": 64.5
+        },
+        "_F_": 8
+      },
+      "PinModel_A6iO1": {
+        "id": "u_8eaSc",
+        "state": {
+          "_R_": "ModelState_P_hcL"
+        },
+        "zIndex": 0,
+        "_type": 2,
+        "type": "normal",
+        "deletable": false,
+        "conAry": [
+          {
+            "_R_": "ConModel_PERVi"
+          }
+        ],
+        "title": "点击",
+        "_schema": {
+          "type": "unknown"
+        },
+        "direction": "output",
+        "hostId": "onClick",
+        "parent": {
+          "_R_": "ToplComModel_DXIIp"
+        },
+        "schema": {
+          "type": "unknown"
+        },
+        "_F_": 2
+      },
+      "ComStyle_qI_5y": {
+        "display": "block",
+        "width": "100%",
+        "height": 42,
+        "marginTop": 50,
+        "_F_": 1
+      },
+      "ModelState__Fbvo": {
+        "_F_": 0
+      },
+      "ModelState_qsPhA": {
+        "_F_": 0
+      },
+      "ModelState_O7BHp": {
+        "_F_": 0
+      },
+      "ComStyle_b1or9": {
+        "display": "block",
+        "width": "100%",
+        "height": 42,
+        "marginTop": 100,
+        "_F_": 1
+      },
+      "ModelState__NRPU": {
+        "_F_": 0
+      },
+      "ModelState_Muiot": {
+        "_F_": 0
+      },
+      "PinModel_inVI3": {
+        "id": "u_Qn9Mu",
+        "state": {
+          "_R_": "ModelState_Muiot"
+        },
+        "zIndex": 0,
+        "_type": 2,
+        "type": "normal",
+        "deletable": false,
+        "conAry": [],
+        "direction": "input",
+        "hostId": "buttonText",
+        "title": "修改按钮文本",
+        "_schema": {
+          "type": "string"
+        },
+        "parent": {
+          "_R_": "ToplComModel_7237r"
+        },
+        "schema": {
+          "type": "string"
+        },
+        "_F_": 2
+      },
+      "ModelState_2Sq8E": {
+        "_F_": 0
+      },
+      "PinModel_12YJ6": {
+        "id": "u_tqxyx",
+        "state": {
+          "_R_": "ModelState_2Sq8E"
+        },
+        "zIndex": 0,
+        "_type": 2,
+        "type": "ext",
+        "deletable": false,
+        "conAry": [],
+        "direction": "input",
+        "hostId": "show",
+        "title": "显示",
+        "_schema": {
+          "type": "any"
+        },
+        "parent": {
+          "_R_": "ToplComModel_7237r"
+        },
+        "schema": {
+          "type": "any"
+        },
+        "_F_": 2
+      },
+      "ModelState_2wZ1T": {
+        "_F_": 0
+      },
+      "PinModel_YOlbz": {
+        "id": "u_Vquis",
+        "state": {
+          "_R_": "ModelState_2wZ1T"
+        },
+        "zIndex": 0,
+        "_type": 2,
+        "type": "ext",
+        "deletable": false,
+        "conAry": [],
+        "direction": "input",
+        "hostId": "hide",
+        "title": "隐藏",
+        "_schema": {
+          "type": "any"
+        },
+        "parent": {
+          "_R_": "ToplComModel_7237r"
+        },
+        "schema": {
+          "type": "any"
+        },
+        "_F_": 2
+      },
+      "ModelState_fl55E": {
+        "_F_": 0
+      },
+      "PinModel_NRaMj": {
+        "id": "u_7EJ_3",
+        "state": {
+          "_R_": "ModelState_fl55E"
+        },
+        "zIndex": 0,
+        "_type": 2,
+        "type": "ext",
+        "deletable": false,
+        "conAry": [],
+        "direction": "input",
+        "hostId": "showOrHide",
+        "title": "显示/隐藏",
+        "_schema": {
+          "type": "any"
+        },
+        "parent": {
+          "_R_": "ToplComModel_7237r"
+        },
+        "schema": {
+          "type": "any"
+        },
+        "_F_": 2
+      },
+      "ModelState_y09Nt": {
+        "_F_": 0
+      },
+      "ModelState_fSobt": {
+        "_F_": 0
+      },
+      "ModelState_HqwRT": {
+        "_F_": 0
+      },
+      "ModelState_5s0jw": {
+        "_F_": 0
+      },
+      "ModelState_gnaLI": {
+        "_F_": 0
+      },
+      "ModelState_jB9lc": {
+        "_F_": 0
+      },
+      "ModelState_5eIqC": {
+        "_F_": 0
+      },
+      "PinModel_FGQnG": {
+        "id": "u_aMvFC",
+        "state": {
+          "_R_": "ModelState_5eIqC"
+        },
+        "zIndex": 0,
+        "_type": 2,
+        "type": "normal",
+        "deletable": false,
+        "conAry": [
+          {
+            "_R_": "ConModel_WN79W"
+          }
+        ],
+        "direction": "input",
+        "hostId": "goto",
+        "title": "跳转到",
+        "_schema": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "params": {
+              "type": "object"
+            },
+            "action": {
+              "type": "string"
+            }
+          }
+        },
+        "parent": {
+          "_R_": "ToplComModel_K3HaX"
+        },
+        "schema": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "params": {
+              "type": "object"
+            },
+            "action": {
+              "type": "string"
+            }
+          }
+        },
+        "_F_": 2
+      },
+      "ComStyle__SZaz": {
+        "display": "block",
+        "_F_": 1
+      },
+      "ComRuntimeModel_hqkwc": {
+        "id": "u_mDyeV",
+        "model": {
+          "data": {
+            "path": "/pages/xxxxxxx/index",
+            "params": {},
+            "action": "navigateTo"
+          },
+          "inputAry": [],
+          "outputAry": [],
+          "outputEvents": {},
+          "style": {
+            "_R_": "ComStyle__SZaz"
+          }
+        },
+        "title": "路由跳转",
+        "refId": "_goto_u0E",
+        "def": {
+          "namespace": "mybricks.taro._goto",
+          "version": "1.0.5",
+          "rtType": "js"
+        },
+        "topl": {
+          "_R_": "ToplComModel_K3HaX"
+        },
+        "_F_": 3
+      },
+      "ToplComModel_K3HaX": {
+        "state": {
+          "_R_": "ModelState_jB9lc"
+        },
+        "_type": 1,
+        "init": false,
+        "style": {
+          "left": 180,
+          "top": 88
+        },
+        "foldedStyle": {},
+        "configPins": [],
+        "_inputPins": [],
+        "inputPins": [
+          {
+            "_R_": "PinModel_FGQnG"
+          }
+        ],
+        "inputPinsInModel": [],
+        "inputPinExts": [],
+        "_outputPins": [],
+        "outputPins": [],
+        "outputPinsInModel": [],
+        "outputPinExts": [],
+        "outputPinNexts": [],
+        "name": "u_fQxuk",
+        "runtime": {
+          "_R_": "ComRuntimeModel_hqkwc"
+        },
+        "parent": {
+          "_R_": "FrameModel_tjDli"
+        },
+        "diagramModel": {
+          "_R_": "DiagramModel_iWDoQ"
+        },
+        "_F_": 4
+      },
+      "DiagramModel_iWDoQ": {
+        "id": "u_e0weK",
+        "state": {
+          "_R_": "ModelState_gnaLI"
+        },
+        "comAry": [
+          {
+            "_R_": "ToplComModelForked_QOfaD"
+          },
+          {
+            "_R_": "ToplComModel_K3HaX"
+          }
+        ],
+        "outputPins": [],
+        "outputJoints": [],
+        "conAry": [
+          {
+            "_R_": "ConModel_WN79W"
+          }
+        ],
+        "commentAry": [],
+        "style": {
+          "visible": true,
+          "left": null,
+          "top": 900,
+          "height": 400,
+          "width": 700
+        },
+        "parent": {
+          "_R_": "FrameModel_tjDli"
+        },
+        "startWithCom": {
+          "_R_": "ToplComModelForked_QOfaD"
+        },
+        "_title": "按钮1 > 点击",
+        "createTime": 1692935230651,
+        "updateTime": 1693299641597,
+        "title": "按钮1 > 点击",
+        "_F_": 5
+      },
+      "ToplComModelForked_QOfaD": {
+        "state": {
+          "_R_": "ModelState_5s0jw"
+        },
+        "_type": 1,
+        "init": false,
+        "style": {
+          "left": 50,
+          "top": 26
+        },
+        "foldedStyle": {},
+        "configPins": [],
+        "_inputPins": [],
+        "inputPins": [],
+        "inputPinsInModel": [],
+        "inputPinExts": [],
+        "_outputPins": [],
+        "outputPins": [
+          {
+            "_R_": "PinModelForked_YeIUF"
+          }
+        ],
+        "outputPinsInModel": [],
+        "outputPinExts": [],
+        "outputPinNexts": [],
+        "parent": {
+          "_R_": "DiagramModel_iWDoQ"
+        },
+        "forkedFrom": {
+          "_R_": "ToplComModel_7237r"
+        },
+        "ioc": {
+          "configs": {},
+          "inputs": {},
+          "outputs": {
+            "onClick": true
+          }
+        },
+        "diagramModel": {
+          "_R_": "DiagramModel_iWDoQ"
+        },
+        "_startInDiagram": true,
+        "_key": "u__Wc5W",
+        "_F_": 6
+      },
+      "PinModelForked_YeIUF": {
+        "id": "u_zhUje",
+        "state": {
+          "_R_": "ModelState_HqwRT"
+        },
+        "zIndex": 0,
+        "_type": 2,
+        "deletable": false,
+        "conAry": [
+          {
+            "_R_": "ConModel_WN79W"
+          }
+        ],
+        "parent": {
+          "_R_": "ToplComModelForked_QOfaD"
+        },
+        "forkedFrom": {
+          "_R_": "PinModel_072X9"
+        },
+        "title": "点击",
+        "schema": {
+          "type": "unknown"
+        },
+        "_F_": 7
+      },
+      "ConModel_WN79W": {
+        "id": "u_nS_dI",
+        "state": {
+          "_R_": "ModelState_fSobt"
+        },
+        "zIndex": 0,
+        "_type": 4,
+        "_ing": false,
+        "commentAry": [],
+        "startPin": {
+          "_R_": "PinModelForked_YeIUF"
+        },
+        "_startPo": {
+          "j": 35.6,
+          "x": 60,
+          "y": 50.5
+        },
+        "finishPin": {
+          "_R_": "PinModel_FGQnG"
+        },
+        "title": "从 点击 到 跳转到 的连接",
+        "parent": {
+          "_R_": "DiagramModel_iWDoQ"
+        },
+        "errorInfo": "Error schema",
+        "startPo": {
+          "j": 35.6,
+          "x": 60,
+          "y": 50.5
+        },
+        "finishPo": {
+          "x": 170.5,
+          "y": 98.5,
+          "j": 46.400000000000006
+        },
+        "_F_": 8
+      },
+      "PinModel_072X9": {
+        "id": "u_zhUje",
+        "state": {
+          "_R_": "ModelState_y09Nt"
+        },
+        "zIndex": 0,
+        "_type": 2,
+        "type": "normal",
+        "deletable": false,
+        "conAry": [
+          {
+            "_R_": "ConModel_WN79W"
+          }
+        ],
+        "title": "点击",
+        "_schema": {
+          "type": "unknown"
+        },
+        "direction": "output",
+        "hostId": "onClick",
+        "parent": {
+          "_R_": "ToplComModel_7237r"
+        },
+        "schema": {
+          "type": "unknown"
+        },
+        "_F_": 2
+      },
+      "ToplComModel_7237r": {
+        "state": {
+          "_R_": "ModelState__NRPU"
+        },
+        "_type": 1,
+        "init": false,
+        "style": {
+          "left": 120,
+          "top": 200
+        },
+        "foldedStyle": {},
+        "configPins": [],
+        "_inputPins": [],
+        "inputPins": [
+          {
+            "_R_": "PinModel_inVI3"
+          }
+        ],
+        "inputPinsInModel": [],
+        "inputPinExts": [
+          {
+            "_R_": "PinModel_12YJ6"
+          },
+          {
+            "_R_": "PinModel_YOlbz"
+          },
+          {
+            "_R_": "PinModel_NRaMj"
+          }
+        ],
+        "_outputPins": [],
+        "outputPins": [
+          {
+            "_R_": "PinModel_072X9"
+          }
+        ],
+        "outputPinsInModel": [],
+        "outputPinExts": [],
+        "outputPinNexts": [],
+        "name": "u_z5gXc",
+        "runtime": {
+          "_R_": "ComRuntimeModel_4nvJA"
+        },
+        "parent": {
+          "_R_": "FrameModel_tjDli"
+        },
+        "_F_": 4
+      },
+      "ComRuntimeModel_4nvJA": {
+        "id": "u_Hgs7d",
+        "model": {
+          "data": {
+            "variant": "text",
+            "color": "primary",
+            "size": "",
+            "shape": "",
+            "block": true,
+            "loading": false,
+            "icon": "",
+            "disabled": false,
+            "hairline": true,
+            "style": {
+              "background": "#ea732e",
+              "color": "#ffffff",
+              "border-radius": "0px",
+              "border-width": "0px"
+            },
+            "text": "跳转不存在页面"
+          },
+          "inputAry": [],
+          "outputAry": [],
+          "outputEvents": {
+            "onClick": [
+              {
+                "type": "defined",
+                "options": {
+                  "id": "u_e0weK",
+                  "title": "按钮1 > 点击"
+                },
+                "active": true
+              }
+            ]
+          },
+          "style": {
+            "_R_": "ComStyle_b1or9"
+          }
+        },
+        "title": "按钮1",
+        "refId": "button_MZP",
+        "def": {
+          "namespace": "mybricks.taro.button",
+          "version": "1.0.15"
+        },
+        "_autoRun": true,
+        "topl": {
+          "_R_": "ToplComModel_7237r"
+        },
+        "geo": {
+          "_R_": "GeoComModel_bFW6w"
+        },
+        "_F_": 3
+      },
+      "GeoComModel_bFW6w": {
+        "state": {
+          "_R_": "ModelState_O7BHp"
+        },
+        "init": false,
+        "name": "u_z5gXc",
+        "runtime": {
+          "_R_": "ComRuntimeModel_4nvJA"
+        },
+        "parent": {
+          "_R_": "SlotModel_g24uQ"
+        },
+        "_F_": 9
+      },
+      "SlotStyleModel_JWVr8": {
+        "zoom": 1,
+        "layout": "flex-column",
+        "justifyContent": "flex-start",
+        "alignItems": "flex-start",
+        "_F_": 10
+      },
+      "SlotModel_g24uQ": {
+        "id": "content",
+        "state": {
+          "_R_": "ModelState_qsPhA"
+        },
+        "comAry": [
+          {
+            "_R_": "GeoComModel__0CvT"
+          },
+          {
+            "_R_": "GeoComModel_bFW6w"
+          }
+        ],
+        "style": {
+          "_R_": "SlotStyleModel_JWVr8"
+        },
+        "title": "内容",
+        "parent": {
+          "_R_": "GeoComModel_1DZg9"
+        },
+        "_F_": 11
+      },
+      "GeoComModel__0CvT": {
+        "state": {
+          "_R_": "ModelState__Fbvo"
+        },
+        "init": false,
+        "name": "u_fqTtw",
+        "runtime": {
+          "_R_": "ComRuntimeModel_FwdF_"
+        },
+        "parent": {
+          "_R_": "SlotModel_g24uQ"
+        },
+        "_F_": 9
+      },
+      "ComRuntimeModel_FwdF_": {
+        "id": "u_TX2NJ",
+        "model": {
+          "data": {
+            "variant": "text",
+            "color": "primary",
+            "size": "",
+            "shape": "",
+            "block": true,
+            "loading": false,
+            "icon": "",
+            "disabled": false,
+            "hairline": true,
+            "style": {
+              "background": "#ea732e",
+              "color": "#ffffff",
+              "border-radius": "0px",
+              "border-width": "0px"
+            },
+            "text": "按钮"
+          },
+          "inputAry": [],
+          "outputAry": [],
+          "outputEvents": {
+            "onClick": [
+              {
+                "type": "defined",
+                "options": {
+                  "id": "u_y1q8L",
+                  "title": "按钮 > 点击"
+                },
+                "active": true
+              }
+            ]
+          },
+          "style": {
+            "_R_": "ComStyle_qI_5y"
+          }
+        },
+        "title": "按钮",
+        "refId": "button___h",
+        "def": {
+          "namespace": "mybricks.taro.button",
+          "version": "1.0.15"
+        },
+        "_autoRun": true,
+        "topl": {
+          "_R_": "ToplComModel_DXIIp"
+        },
+        "geo": {
+          "_R_": "GeoComModel__0CvT"
+        },
+        "_F_": 3
+      },
+      "ToplComModel_DXIIp": {
+        "state": {
+          "_R_": "ModelState__VH9P"
+        },
+        "_type": 1,
+        "init": false,
+        "style": {
+          "left": 160,
+          "top": 190
+        },
+        "foldedStyle": {},
+        "configPins": [],
+        "_inputPins": [],
+        "inputPins": [
+          {
+            "_R_": "PinModel_0HX48"
+          }
+        ],
+        "inputPinsInModel": [],
+        "inputPinExts": [
+          {
+            "_R_": "PinModel_X3ZiU"
+          },
+          {
+            "_R_": "PinModel_iEhU_"
+          },
+          {
+            "_R_": "PinModel_9fRc0"
+          }
+        ],
+        "_outputPins": [],
+        "outputPins": [
+          {
+            "_R_": "PinModel_A6iO1"
+          }
+        ],
+        "outputPinsInModel": [],
+        "outputPinExts": [],
+        "outputPinNexts": [],
+        "name": "u_fqTtw",
+        "runtime": {
+          "_R_": "ComRuntimeModel_FwdF_"
+        },
+        "parent": {
+          "_R_": "FrameModel_tjDli"
+        },
+        "_F_": 4
+      },
+      "ModelState_bv0OL": {
+        "_F_": 0
+      },
+      "DiagramModel_CmIul": {
+        "id": "u_bElXF",
+        "state": {
+          "_R_": "ModelState_bv0OL"
+        },
+        "comAry": [],
+        "outputPins": [],
+        "outputJoints": [],
+        "conAry": [],
+        "commentAry": [],
+        "style": {
+          "visible": false,
+          "left": null,
+          "top": null,
+          "height": 400,
+          "width": 700
+        },
+        "parent": {
+          "_R_": "FrameModel_tjDli"
+        },
+        "_title": "主场景",
+        "createTime": 1691653413534,
+        "isGlobal": true,
+        "showIO": true,
+        "updateTime": 1692935208081,
+        "title": "主场景",
+        "_F_": 5
+      },
+      "FrameModel_tjDli": {
+        "id": "main",
+        "state": {
+          "_R_": "ModelState_TXyd7"
+        },
+        "zIndex": 0,
+        "_type": 0,
+        "style": {
+          "left": null,
+          "top": null
+        },
+        "editable": true,
+        "isFrame": true,
+        "frameAry": [],
+        "inputPins": [
+          {
+            "_R_": "PinModel_54153"
+          }
+        ],
+        "_inputPins": [],
+        "outputPins": [
+          {
+            "_R_": "PinModel_glQDO"
+          },
+          {
+            "_R_": "PinModel_RrFrO"
+          }
+        ],
+        "_outputPins": [],
+        "inputJoints": [],
+        "outputJoints": [],
+        "comAry": [
+          {
+            "_R_": "ToplComModel_syvSf"
+          },
+          {
+            "_R_": "ToplComModel_DXIIp"
+          },
+          {
+            "_R_": "ToplComModel_02Qao"
+          },
+          {
+            "_R_": "ToplComModel_7237r"
+          },
+          {
+            "_R_": "ToplComModel_K3HaX"
+          }
+        ],
+        "diagramAry": [
+          {
+            "_R_": "DiagramModel_CmIul"
+          },
+          {
+            "_R_": "DiagramModel_uL7yF"
+          },
+          {
+            "_R_": "DiagramModel_iWDoQ"
+          }
+        ],
+        "zIndexCur": {
+          "con": 0,
+          "com": 100
+        },
+        "title": "首页",
+        "_defaultF": true,
+        "_F_": 12
+      },
+      "ToplComModel_syvSf": {
+        "state": {
+          "_R_": "ModelState__P2KG"
+        },
+        "_type": 1,
+        "init": false,
+        "style": {
+          "left": 130,
+          "top": 180
+        },
+        "foldedStyle": {},
+        "configPins": [],
+        "_inputPins": [],
+        "inputPins": [],
+        "inputPinsInModel": [],
+        "inputPinExts": [],
+        "_outputPins": [],
+        "outputPins": [],
+        "outputPinsInModel": [],
+        "outputPinExts": [],
+        "outputPinNexts": [],
+        "name": "u_yKNux",
+        "runtime": {
+          "_R_": "ComRuntimeModel_XIew6"
+        },
+        "asRoot": true,
+        "parent": {
+          "_R_": "FrameModel_tjDli"
+        },
+        "_F_": 4
+      },
+      "ComRuntimeModel_XIew6": {
+        "id": "u_t0llu",
+        "model": {
+          "data": {
+            "useNavigationStyle": "default",
+            "navigationStyle": "default",
+            "navigationBarBackgroundColor": "#464646",
+            "navigationBarTextStyle": "white",
+            "navigationBarTitleText": "Mybricks",
+            "homeButton": false,
+            "customNavigation": {
+              "style": {
+                "backgroundColor": "#464646"
+              },
+              "useFixed": true
+            },
+            "useTabBar": true,
+            "tabBar": [
+              {
+                "scene": {
+                  "id": "main"
+                },
+                "text": "标签项",
+                "selectedIconPath": "data:image/png;base64,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",
+                "selectedIconStyle": {
+                  "width": "22px",
+                  "height": "22px"
+                },
+                "selectedTextStyle": {
+                  "fontSize": 12,
+                  "color": "#FD6A00"
+                },
+                "normalIconPath": "data:image/png;base64,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",
+                "normalIconStyle": {
+                  "width": "22px",
+                  "height": "22px"
+                },
+                "normalTextStyle": {
+                  "fontSize": 12,
+                  "color": "#909093"
+                }
+              },
+              {
+                "scene": {
+                  "id": "u_8LFmA"
+                },
+                "text": "标签项",
+                "selectedIconPath": "data:image/png;base64,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",
+                "selectedIconStyle": {
+                  "width": "22px",
+                  "height": "22px"
+                },
+                "selectedTextStyle": {
+                  "fontSize": 12,
+                  "color": "#FD6A00"
+                },
+                "normalIconPath": "data:image/png;base64,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",
+                "normalIconStyle": {
+                  "width": "22px",
+                  "height": "22px"
+                },
+                "normalTextStyle": {
+                  "fontSize": 12,
+                  "color": "#909093"
+                }
+              }
+            ],
+            "background": "#ffffff",
+            "enablePullDownRefresh": false,
+            "backgroundTextStyle": "dark",
+            "backgroundColor": "#464646",
+            "enableShareAppMessage": false,
+            "onReachBottomDistance": 30,
+            "pageOrientation": "portrait",
+            "disableScroll": false,
+            "disableSwipeBack": false,
+            "useFooter": false,
+            "id": "main"
+          },
+          "inputAry": [],
+          "outputAry": [],
+          "outputEvents": {},
+          "style": {
+            "_R_": "ComStyle_serfH"
+          }
+        },
+        "title": "页面",
+        "refId": "systemPage_OZE",
+        "def": {
+          "namespace": "mybricks.taro.systemPage",
+          "version": "1.0.1"
+        },
+        "_autoRun": true,
+        "topl": {
+          "_R_": "ToplComModel_syvSf"
+        },
+        "geo": {
+          "_R_": "GeoComModel_1DZg9"
+        },
+        "_F_": 3
+      },
+      "GeoComModel_1DZg9": {
+        "state": {
+          "_R_": "ModelState_6__BN"
+        },
+        "init": false,
+        "name": "u_yKNux",
+        "runtime": {
+          "_R_": "ComRuntimeModel_XIew6"
+        },
+        "asRoot": true,
+        "slots": [
+          {
+            "_R_": "SlotModel_g24uQ"
+          }
+        ],
+        "parent": {
+          "_R_": "SlotModel_YQG6_"
+        },
+        "lockedSilent": true,
+        "_F_": 9
+      },
+      "SlotStyleModel_HkEH8": {
+        "zoom": 1,
+        "layout": "flex-column",
+        "justifyContent": "flex-start",
+        "alignItems": "flex-start",
+        "height": 667,
+        "width": 375,
+        "_F_": 10
+      },
+      "SlotModel_YQG6_": {
+        "id": "main",
+        "state": {
+          "_R_": "ModelState_NQ8fX"
+        },
+        "comAry": [
+          {
+            "_R_": "GeoComModel_1DZg9"
+          }
+        ],
+        "style": {
+          "_R_": "SlotStyleModel_HkEH8"
+        },
+        "title": "首页",
+        "template": {
+          "namespace": "mybricks.taro.systemPage",
+          "deletable": false,
+          "asRoot": true
+        },
+        "deletable": false,
+        "_F_": 11
+      }
+    },
+    "def": {
+      "slot": {
+        "_R_": "SlotModel_YQG6_"
+      },
+      "frame": {
+        "_R_": "FrameModel_tjDli"
+      }
+    }
+  }
+}
