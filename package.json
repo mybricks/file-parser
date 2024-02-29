@@ -1,6 +1,6 @@
 {
   "name": "@mybricks/file-parser",
-  "version": "1.0.16",
+  "version": "1.0.17",
   "description": "Parser for rxui file content",
   "main": "index.min.js",
   "scripts": {

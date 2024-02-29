@@ -243,11 +243,11 @@ export function toFrameJSON(frame, regs?: {
         
         let timerPinInputId
         
-        if(!fPin.parent){
+        if (!fPin.parent) {
           debugger
         }
         
-        if(fPin.parent){
+        if (fPin.parent) {
           if (fPin.parent.timerInputPin) {
             timerPinInputId = fPin.parent.timerInputPin.id
           }
@@ -517,11 +517,14 @@ export function toFrameJSON(frame, regs?: {
         
         const style = {} as any
         if (rt.geo) {
-          style.width = rt.geo.$el ? rt.geo.$el.offsetWidth : void 0
-          style.height = rt.geo.$el ? rt.geo.$el.offsetHeight : void 0
+          style.width = model.style.widthFact
+          style.height = model.style.heightFact
+          
+          // style.width = rt.geo.$el ? rt.geo.$el.offsetWidth : void 0
+          // style.height = rt.geo.$el ? rt.geo.$el.offsetHeight : void 0
         }
         
-        if(comsReg[rt.id]){
+        if (comsReg[rt.id]) {
           debugger
         }
         
