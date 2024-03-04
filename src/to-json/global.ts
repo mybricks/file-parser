@@ -1,7 +1,10 @@
 import * as Arrays from "../utils/arrays";
 import {toFrameJSON} from './module'
 
-export function toJSON(toplViewModel, needClone?) {
+export function toJSON(toplViewModel, opts: {
+  needClone?: boolean,
+  withMock?: boolean
+}) {
   const comsReg = {}
   const consReg = {}
   const pinRelsReg = {}
@@ -208,7 +211,7 @@ export function toJSON(toplViewModel, needClone?) {
       
       const geo = rt.geo
       
-      const model = needClone ? JSON.parse(JSON.stringify(rt.model)) : rt.model
+      const model = opts?.needClone ? JSON.parse(JSON.stringify(rt.model)) : rt.model
       
       comsReg[rt.id] = {
         id: rt.id,
@@ -256,7 +259,7 @@ export function toJSON(toplViewModel, needClone?) {
       
       const geo = rt.geo
       
-      const model = needClone ? JSON.parse(JSON.stringify(rt.model)) : rt.model
+      const model = opts?.needClone ? JSON.parse(JSON.stringify(rt.model)) : rt.model
       
       comsReg[rt.id] = {
         id: rt.id,
@@ -296,14 +299,15 @@ export function toJSON(toplViewModel, needClone?) {
   if (toplViewModel.frames) {//全局Fx
     toplViewModel.frames.forEach(frame => {
       if (frame.type === 'fx') {
-        const frameJSON = toFrameJSON(frame, void 0, needClone)
+        const frameJSON = toFrameJSON(frame, void 0, opts)
         fxFrames.push(frameJSON)
       }
     })
   }
   
   return {
-    comsReg, consReg, pinRels: pinRelsReg,
+    comsReg, consReg,
+    pinRels: pinRelsReg,
     pinProxies: pinProxyReg,
     fxFrames
   }

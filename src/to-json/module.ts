@@ -1,7 +1,10 @@
 import * as Arrays from '../utils/arrays'
 import pkg from '../../package.json'
 
-export function toJSON({slot, frame}, needClone?) {
+export function toJSON({slot, frame}, opts: {
+  needClone?: boolean,
+  withMock?: boolean
+}) {
   const depsReg = []
   const comsReg = {}
   
@@ -11,12 +14,12 @@ export function toJSON({slot, frame}, needClone?) {
   
   let slotJSON
   if (slot) {
-    slotJSON = toSlotJSON(slot, {depsReg, comsReg}, frame, needClone)
+    slotJSON = toSlotJSON(slot, {depsReg, comsReg}, frame, opts)
   }
   
   let frameJSON
   if (frame) {
-    frameJSON = toFrameJSON(frame, {depsReg, comsReg}, needClone)
+    frameJSON = toFrameJSON(frame, {depsReg, comsReg}, opts)
   }
   
   return Object.assign({
@@ -33,7 +36,10 @@ export function toJSON({slot, frame}, needClone?) {
   )
 }
 
-export function toSlotJSON(slot, {depsReg, comsReg}, frame?, needClone?) {
+export function toSlotJSON(slot, {depsReg, comsReg}, frame, opts: {
+  needClone?: boolean,
+  withMock?: boolean
+}) {
   let ui: {
     id,
     title,
@@ -63,7 +69,7 @@ export function toSlotJSON(slot, {depsReg, comsReg}, frame?, needClone?) {
             depsReg.push(def)
           }
           
-          const model = needClone ? JSON.parse(JSON.stringify(rt.model)) : rt.model
+          const model = opts.needClone ? JSON.parse(JSON.stringify(rt.model)) : rt.model
           
           comsReg[rt.id] = {
             id: rt.id,
@@ -116,12 +122,15 @@ export function toSlotJSON(slot, {depsReg, comsReg}, frame?, needClone?) {
   return ui
 }
 
-export function toFrameJSON(frame, regs?: {
+export function toFrameJSON(frame, regs: {
   depsReg,
   comsReg
-}, needClone?) {
-  const depsReg = regs?.depsReg || []
-  const comsReg = regs?.comsReg || {}
+}, opts: {
+  needClone?,
+  withMock?
+}) {
+  const depsReg = regs.depsReg || []
+  const comsReg = regs.comsReg || {}
   
   const _inputsReg = []
   const _outputsReg = []
@@ -428,8 +437,8 @@ export function toFrameJSON(frame, regs?: {
             type: pin.type,
             schema: pin.schema,
             extValues: pin.extValues,
-            // mockData: pin.mockData,//添加mock数据
-            // mockDataType: pin.mockDataType
+            mockData: opts.withMock?pin.mockData:void 0,//添加mock数据
+            mockDataType: opts.withMock?pin.mockDataType:void 0
           })
         }
       })
@@ -509,24 +518,32 @@ export function toFrameJSON(frame, regs?: {
         //   debugger
         // }
         
-        let model = needClone ? JSON.parse(JSON.stringify(rt.model)) : rt.model
+        let model = opts.needClone ? JSON.parse(JSON.stringify(rt.model)) : rt.model
+        
         if (rt.modelForToJSON) {
           model = Object.assign({}, model, rt.modelForToJSON)//合并
           rt.modelForToJSON = void 0//清除
         }
         
         const style = {} as any
+        
         if (rt.geo) {
           style.width = model.style.widthFact
           style.height = model.style.heightFact
+          
+          // if(rt.geo.$el){
+          //   if(rt.geo.$el.offsetHeight!==model.style.heightFact){
+          //     debugger
+          //   }
+          // }
           
           // style.width = rt.geo.$el ? rt.geo.$el.offsetWidth : void 0
           // style.height = rt.geo.$el ? rt.geo.$el.offsetHeight : void 0
         }
         
-        if (comsReg[rt.id]) {
-          debugger
-        }
+        // if (comsReg[rt.id]) {
+        //   debugger
+        // }
         
         comsReg[rt.id] = {
           id: rt.id,
