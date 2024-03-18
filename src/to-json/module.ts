@@ -104,7 +104,7 @@ export function toSlotJSON(slot, {depsReg, comsReg}, frame, opts: {
       const widthFact = slot.style.widthFact
       const heightFact = slot.style.heightFact
       
-      const style = Object.assign({}, slot.style, {widthFact, heightFact})
+      const style = Object.assign({}, slot.style, {width: widthFact, height: heightFact})
       
       return {
         id: slot.id,
