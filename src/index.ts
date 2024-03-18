@@ -4,14 +4,14 @@ import {parsePage, parseProject} from './rxui-parser'
 
 export function getGlobalJSON(toplViewModel, opts?: {
   needClone?: boolean,
-  withMock?: boolean
+  withMockData?: boolean
 }) {
   return toGlobalJSON(toplViewModel, opts||{})
 }
 
 export function getJSONFromModule(module: { slot, frame }, opts?: {
   needClone?: boolean,
-  withMock?: boolean
+  withMockData?: boolean
 }) {
   return toJSON(module, opts||{})
 }

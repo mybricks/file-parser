@@ -3,7 +3,7 @@ import {toFrameJSON} from './module'
 
 export function toJSON(toplViewModel, opts: {
   needClone?: boolean,
-  withMock?: boolean
+  withMockData?: boolean
 }) {
   const comsReg = {}
   const consReg = {}
@@ -299,7 +299,7 @@ export function toJSON(toplViewModel, opts: {
   if (toplViewModel.frames) {//全局Fx
     toplViewModel.frames.forEach(frame => {
       if (frame.type === 'fx') {
-        const frameJSON = toFrameJSON(frame, void 0, opts)
+        const frameJSON = toFrameJSON(frame, {}, opts)
         fxFrames.push(frameJSON)
       }
     })

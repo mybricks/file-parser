@@ -3,7 +3,7 @@ import pkg from '../../package.json'
 
 export function toJSON({slot, frame}, opts: {
   needClone?: boolean,
-  withMock?: boolean
+  withMockData?: boolean
 }) {
   const depsReg = []
   const comsReg = {}
@@ -38,7 +38,7 @@ export function toJSON({slot, frame}, opts: {
 
 export function toSlotJSON(slot, {depsReg, comsReg}, frame, opts: {
   needClone?: boolean,
-  withMock?: boolean
+  withMockData?: boolean
 }) {
   let ui: {
     id,
@@ -98,10 +98,13 @@ export function toSlotJSON(slot, {depsReg, comsReg}, frame, opts: {
         })
       })
       
-      const width = slot.$el ? slot.$el.offsetWidth : slot.width
-      const height = slot.$el ? slot.$el.offsetHeight : slot.height
+      // const width = slot.$el ? slot.$el.offsetWidth : slot.width
+      // const height = slot.$el ? slot.$el.offsetHeight : slot.height
       
-      const style = Object.assign({}, slot.style, {width, height})
+      const widthFact = slot.style.widthFact
+      const heightFact = slot.style.heightFact
+      
+      const style = Object.assign({}, slot.style, {widthFact, heightFact})
       
       return {
         id: slot.id,
@@ -127,7 +130,7 @@ export function toFrameJSON(frame, regs: {
   comsReg
 }, opts: {
   needClone?,
-  withMock?
+  withMockData?
 }) {
   const depsReg = regs.depsReg || []
   const comsReg = regs.comsReg || {}
@@ -437,8 +440,8 @@ export function toFrameJSON(frame, regs: {
             type: pin.type,
             schema: pin.schema,
             extValues: pin.extValues,
-            mockData: opts.withMock?pin.mockData:void 0,//添加mock数据
-            mockDataType: opts.withMock?pin.mockDataType:void 0
+            mockData: opts.withMockData ? pin.mockData : void 0,//添加mock数据
+            mockDataType: opts.withMockData ? pin.mockDataType : void 0
           })
         }
       })
@@ -468,7 +471,7 @@ export function toFrameJSON(frame, regs: {
           })
         }
         
-        if (pin.type === 'event') {
+        if (pin.type === 'event' || pin.type === 'shortcut') {
           let idPre = '_rootFrame_'//_rootFrame_
           scanOutputPin(pin, idPre)
         }
@@ -490,10 +493,10 @@ export function toFrameJSON(frame, regs: {
     
     if (frame.comAry) {
       frame.comAry.forEach(com => {
-        if (com.title === '按钮1' && com.id === 'u_zJFoV') {
-          console.log(com.id)
-          debugger
-        }
+        // if (com.title === '按钮1' && com.id === 'u_zJFoV') {
+        //   console.log(com.id)
+        //   debugger
+        // }
         
         if (!com || !com.runtime) {//可能存在组件已损坏的情况
           return
