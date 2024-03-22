@@ -104,7 +104,9 @@ export function toSlotJSON(slot, {depsReg, comsReg}, frame, opts: {
       const widthFact = slot.style.widthFact
       const heightFact = slot.style.heightFact
       
-      const style = Object.assign({}, slot.style, {width: widthFact, height: heightFact})
+      const style = Object.assign({},slot.style,{width: widthFact, height: heightFact})
+
+      //console.log(style)////TODO
       
       return {
         id: slot.id,
@@ -531,6 +533,8 @@ export function toFrameJSON(frame, regs: {
         const style = {} as any
         
         if (rt.geo) {
+          //debugger
+          
           style.width = model.style.widthFact
           style.height = model.style.heightFact
           
