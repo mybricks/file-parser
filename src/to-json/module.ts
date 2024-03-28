@@ -104,8 +104,8 @@ export function toSlotJSON(slot, {depsReg, comsReg}, frame, opts: {
       const widthFact = slot.style.widthFact
       const heightFact = slot.style.heightFact
       
-      const style = Object.assign({},slot.style,{width: widthFact, height: heightFact})
-
+      const style = Object.assign({}, slot.style, {width: widthFact, height: heightFact})
+      
       //console.log(style)////TODO
       
       return {
@@ -293,11 +293,13 @@ export function toFrameJSON(frame, regs: {
           const realFPin = fPin.forkedFrom || fPin
           const realParentCom = pinParent.forkedFrom || pinParent
           
-          if (realParentCom && realParentCom.runtime) {
+          if (realParentCom && (realParentCom.runtime || realParentCom._todo_ && realParentCom.comId)) {//realParentCom._todo&&realParentCom.comId 全局变量
             // if(!realParentCom.runtime){
             //   debugger
             // }
             
+            const parentComId = realParentCom.runtime?.id || realParentCom.comId
+            const parentComDef = realParentCom.runtime?.def || realParentCom.def
             
             const startPinParentKey = con.startPin.parent._key
             const finishPinParentKey = con.finishPin.parent._key
@@ -309,8 +311,8 @@ export function toFrameJSON(frame, regs: {
               targetFrameKey,
               startPinParentKey,
               finishPinParentKey,
-              comId: realParentCom.runtime.id,
-              def: realParentCom.runtime.def,
+              comId: parentComId,
+              def: parentComDef,
               timerPinInputId,
               pinId: realFPin.hostId,
               pinType: realFPin.type,
