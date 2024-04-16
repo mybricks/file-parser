@@ -210,7 +210,7 @@ export function toFrameJSON(frame, regs: {
   }
   
   const scanOutputPin = (pin, idPre) => {
-    // if(pin.title==='打开'){
+    // if(pin.title==='ABC'){
     //   debugger
     // }
     
@@ -240,7 +240,7 @@ export function toFrameJSON(frame, regs: {
       }
     }
     
-    if (pin.conAry) {
+    if (pin.conAry?.length > 0) {
       const cons = []
       pin.conAry.forEach(con => {
         let frameKey,
@@ -304,7 +304,7 @@ export function toFrameJSON(frame, regs: {
             const startPinParentKey = con.startPin.parent._key
             const finishPinParentKey = con.finishPin.parent._key
             
-            cons.push({
+            const conReg = {
               id: con.id,
               type: 'com',
               frameKey,
@@ -320,7 +320,13 @@ export function toFrameJSON(frame, regs: {
               extBinding: realFPin.extBinding,
               isIgnored: con.isIgnored,
               isBreakpoint: con.isBreakpoint
-            })
+            }
+            
+            if (con.startPin.isStarter) {
+              delete conReg.startPinParentKey
+            }
+            
+            cons.push(conReg)
           }
         } else {
           const realFPin = fPin.forkedFrom || fPin
@@ -421,6 +427,12 @@ export function toFrameJSON(frame, regs: {
         }
       })
     }
+    
+    // console.log(frame.title)
+    //
+    // if (frame.title === '全局Fx卡片1') {
+    //   debugger
+    // }
     
     if (frame.inputPins) {
       frame.inputPins.forEach(pin => {
@@ -525,6 +537,10 @@ export function toFrameJSON(frame, regs: {
         //   debugger
         // }
         
+        // if(com.runtime.title==='模块2'){
+        //   debugger
+        // }
+        
         let model = opts.needClone ? JSON.parse(JSON.stringify(rt.model)) : rt.model
         
         if (rt.modelForToJSON) {
@@ -553,6 +569,7 @@ export function toFrameJSON(frame, regs: {
         // if (comsReg[rt.id]) {
         //   debugger
         // }
+        
         
         comsReg[rt.id] = {
           id: rt.id,

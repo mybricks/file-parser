@@ -12,7 +12,7 @@ export function toJSON(toplViewModel, opts: {
   
   const fxFrames = []
   
-  const themes = []
+  //const themes = []
   
   const scanInputPin = (pin, idPre) => {
     if (pin.rels) {
@@ -108,7 +108,7 @@ export function toJSON(toplViewModel, opts: {
         if (pinParent._type === 1) {//toplcom
           const realFPin = fPin.forkedFrom || fPin
           const realParentCom = pinParent.forkedFrom || pinParent
-          
+
           const startPinParentKey = con.startPin.parent._key
           const finishPinParentKey = con.finishPin.parent._key
           
@@ -248,54 +248,6 @@ export function toJSON(toplViewModel, opts: {
     })
   }
   
-  if (toplViewModel.comAry) {//全局变量
-    toplViewModel.comAry.forEach(com => {
-      const rt = com.runtime
-      const def = rt.def
-      
-      const configPinIdAry = []
-      const inputPinIdAry = []
-      const outPinIdAry = []
-      
-      const geo = rt.geo
-      
-      const model = opts?.needClone ? JSON.parse(JSON.stringify(rt.model)) : rt.model
-      
-      comsReg[rt.id] = {
-        id: rt.id,
-        def,
-        title: rt.title,
-        model,
-        reservedEditorAry: geo ? geo.reservedEditorAry : void 0,
-        configs: configPinIdAry,
-        inputs: inputPinIdAry,
-        outputs: outPinIdAry
-      }
-      // if(com.title==='对话框'){
-      //   debugger
-      // }
-      
-      Arrays.each(pin => {
-          scanInputPin(pin, rt.id)
-          inputPinIdAry.push(pin.hostId)
-        }, com.inputPins,
-        com.inputPinsInModel,
-        com.inputPinExts,
-      )
-      
-      Arrays.each(pin => {
-          scanOutputPin(pin, rt.id)
-          outPinIdAry.push(pin.hostId)
-        }, com.outputPins,
-        com.outputPinsInModel,
-        com.outputPinExts,
-        com.outputPinNexts)
-      // if (com.runtime.def.rtType === 'js') {
-      //
-      // }
-    })
-  }
-  
   if (toplViewModel.frames) {//全局Fx
     toplViewModel.frames.forEach(frame => {
       if (frame.type === 'fx') {
@@ -306,7 +258,8 @@ export function toJSON(toplViewModel, opts: {
   }
   
   return {
-    comsReg, consReg,
+    comsReg,
+    consReg,
     pinRels: pinRelsReg,
     pinProxies: pinProxyReg,
     fxFrames

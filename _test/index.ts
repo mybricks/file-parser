@@ -4,7 +4,11 @@ import {resolve} from "path";
 
 (async () => {
   const contentJson = await readFileSync(resolve(__dirname, "dump-meta-page.json"))
-  const resultContent = toJSONFromPageDump(contentJson.toString())
+  //global JSON
+  const resultContent = toJSONFromPageDump(contentJson.toString())//meta 单页测试
+  
+  //render-web.transformToJSON(global,resultContent)
+  
   writeFileSync(
     resolve(__dirname, "result.json"),
     JSON.stringify(resultContent)
