@@ -551,13 +551,27 @@ export function toFrameJSON(frame, regs: {
           return
         }
         
+        if (com.diagramModel) {//校验对应diagram是否已被删除的情况
+          const diagram = com.diagramModel
+          const frameModel = diagram.parent
+          if (frameModel && frameModel.diagramAry && !frameModel.diagramAry.find(dia => dia.id === diagram.id)) {//对应diagram已被删除
+            //console.log(com.runtime.title, '对应diagram已被删除')
+            return
+          }
+        }
+        
         const rt = com.runtime
+        
+        // if (rt.id === 'u_6CUxt') {
+        //   debugger
+        // }
         
         const def = rt.def
         
         if (def.namespace === 'mybricks.core-comlib.selection') {//忽略选区组件
           return
         }
+        
         if (def.namespace === 'mybricks.core-comlib.module') {//模块
           const moduleId = com.ioProxyForCall?.frame.id
           if (moduleId) {
@@ -635,7 +649,6 @@ export function toFrameJSON(frame, regs: {
         // if (comsReg[rt.id]) {
         //   debugger
         // }
-        
         
         comsReg[rt.id] = {
           id: rt.id,
