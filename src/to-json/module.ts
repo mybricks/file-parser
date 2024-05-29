@@ -1,9 +1,13 @@
 import * as Arrays from '../utils/arrays'
 import pkg from '../../package.json'
+import {getJSONDiff} from "../utils/json";
 
 export function toJSON({slot, frame}, opts: {
   needClone?: boolean,
-  withMockData?: boolean
+  withMockData?: boolean,
+  onlyDiff?: {
+    getComDef: () => {}
+  }
 }) {
   const depsReg = []
   const comsReg = {}
@@ -65,7 +69,17 @@ export function toSlotJSON(slot, {depsReg, comsReg}, frame, opts: {
         if (!frame) {//没有toplview的情况
           const rt = com.runtime
           const def = rt.def
-          if (!depsReg.find(now => now.namespace === def.namespace && now.version === def.version)) {
+          
+          if (def.namespace === 'mybricks.core-comlib.selection') {//忽略选区组件
+            return
+          }
+          
+          if (def.namespace === 'mybricks.core-comlib.module') {//模块
+            const moduleId = com.proxySlot.id
+            if (!depsReg.find(now => now.namespace === def.namespace && now.version === def.version && now.moduleId === moduleId)) {
+              depsReg.push({...def, moduleId})
+            }
+          } else if (!depsReg.find(now => now.namespace === def.namespace && now.version === def.version)) {
             depsReg.push(def)
           }
           
@@ -104,7 +118,18 @@ export function toSlotJSON(slot, {depsReg, comsReg}, frame, opts: {
       const widthFact = slot.style.widthFact
       const heightFact = slot.style.heightFact
       
-      const style = Object.assign({}, slot.style, {width: widthFact, height: heightFact})
+      // if(slot.title==='模块1'){
+      //   debugger
+      //
+      //   console.log(slot.style)
+      // }
+      //
+      
+      const style = Object.assign({},
+        slot.style, {
+          width: widthFact,
+          height: slot.showType === 'module' || slot.type === 'module' ? heightFact : undefined
+        })
       
       //console.log(style)////TODO
       
@@ -129,10 +154,13 @@ export function toSlotJSON(slot, {depsReg, comsReg}, frame, opts: {
 
 export function toFrameJSON(frame, regs: {
   depsReg,
-  comsReg
+  comsReg,
 }, opts: {
   needClone?,
-  withMockData?
+  withMockData?,
+  onlyDiff?: {
+    getComDef: () => {}
+  }
 }) {
   const depsReg = regs.depsReg || []
   const comsReg = regs.comsReg || {}
@@ -156,7 +184,7 @@ export function toFrameJSON(frame, regs: {
     //   debugger
     // }
     
-    // if(pin.title==='设置禁用'){
+    // if(pin.title==='新增编辑项'){
     //   debugger
     // }
     
@@ -206,6 +234,10 @@ export function toFrameJSON(frame, regs: {
           pinId: pin.proxyPinValue.hostId
         }
       }
+    }
+    
+    if (pin.editor) {
+    
     }
   }
   
@@ -457,7 +489,8 @@ export function toFrameJSON(frame, regs: {
             schema: pin.schema,
             extValues: pin.extValues,
             mockData: opts.withMockData ? pin.mockData : void 0,//添加mock数据
-            mockDataType: opts.withMockData ? pin.mockDataType : void 0
+            mockDataType: opts.withMockData ? pin.mockDataType : void 0,
+            editor: pin.editor
           })
         }
       })
@@ -522,7 +555,17 @@ export function toFrameJSON(frame, regs: {
         
         const def = rt.def
         
-        if (!depsReg.find(now => now.namespace === def.namespace && now.version === def.version)) {
+        if (def.namespace === 'mybricks.core-comlib.selection') {//忽略选区组件
+          return
+        }
+        if (def.namespace === 'mybricks.core-comlib.module') {//模块
+          const moduleId = com.ioProxyForCall?.frame.id
+          if (moduleId) {
+            if (!depsReg.find(now => now.namespace === def.namespace && now.version === def.version && now.moduleId === moduleId)) {
+              depsReg.push({...def, moduleId})
+            }
+          }
+        } else if (!depsReg.find(now => now.namespace === def.namespace && now.version === def.version)) {
           depsReg.push(def)
         }
         
@@ -548,13 +591,36 @@ export function toFrameJSON(frame, regs: {
           rt.modelForToJSON = void 0//清除
         }
         
+        if (Array.isArray(model.outputAry)) {//简化
+          model.outputAry = model.outputAry.map(item => {
+            return item.hostId
+          })
+        }
+        
         const style = {} as any
         
         if (rt.geo) {
           //debugger
+          const geoPtStyle = rt.geo.parent?.style
           
-          style.width = model.style.widthFact
-          style.height = model.style.heightFact
+          if (geoPtStyle?.layout === 'absolute' || geoPtStyle?.layout === 'smart') {
+            delete model.style['marginTop']
+            delete model.style['marginRight']
+            delete model.style['marginBottom']
+            delete model.style['marginLeft']
+          }
+          
+          if (model.style) {
+            if (model.style.position === 'absolute') {
+              style.position = 'absolute'
+            }
+            
+            style.width = model.style.widthFact
+            style.height = model.style.heightFact
+          } else {
+            model.style = {}//兼容
+          }
+          
           
           // if(rt.geo.$el){
           //   if(rt.geo.$el.offsetHeight!==model.style.heightFact){
@@ -579,14 +645,37 @@ export function toFrameJSON(frame, regs: {
           title: rt.title,
           model,
           style,
+          asRoot: geo ? geo.asRoot : void 0,
           reservedEditorAry: geo ? geo.reservedEditorAry : void 0,
-          constraints: geo ? geo.constraints : void 0,
+          //constraints: geo ? geo.constraints : void 0,
           configs: configPinIdAry,
+          //timerInput: void 0,
           _inputs: _inputPinIdAry,
-          timerInput: void 0,
           inputs: inputPinIdAry,
           outputs: outPinIdAry
         }
+        
+        if (opts.onlyDiff
+          //&& typeof opts.onlyDiff.getComDef === 'function'
+        ) {
+          const comDef = opts.onlyDiff.getComDef(def)
+          if (comDef) {
+            const oriData = comDef.data
+            
+            model.data = getJSONDiff(model.data, oriData)
+            
+            if (!def.rtType?.match(/^js/)) {//忽略js组件的inputs
+              delete comsReg[rt.id].inputs
+              delete comsReg[rt.id].outputs
+            }
+            
+            delete comsReg[rt.id].configs
+            delete comsReg[rt.id]._inputs
+            
+            //console.log(oriData, model.data, diffData)
+          }
+        }
+        
         // if(com.title==='对话框'){
         //   debugger
         // }

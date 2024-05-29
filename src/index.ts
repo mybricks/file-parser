@@ -6,14 +6,21 @@ export function getGlobalJSON(toplViewModel, opts?: {
   needClone?: boolean,
   withMockData?: boolean
 }) {
-  return toGlobalJSON(toplViewModel, opts||{})
+  return toGlobalJSON(toplViewModel, opts || {})
 }
 
-export function getJSONFromModule(module: { slot, frame }, opts?: {
-  needClone?: boolean,
-  withMockData?: boolean
-}) {
-  return toJSON(module, opts||{})
+export function getJSONFromModule(module: {
+                                    slot,
+                                    frame
+                                  },
+                                  opts?: {
+                                    needClone?: boolean,
+                                    withMockData?: boolean,
+                                    onlyDiff?: {
+                                      getComDef: () => {}
+                                    }
+                                  }) {
+  return toJSON(module, opts || {})
 }
 
 export function toJSONFromPageDump(pageJSON: string) {
