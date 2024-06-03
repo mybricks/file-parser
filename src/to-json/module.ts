@@ -573,7 +573,7 @@ export function toFrameJSON(frame, regs: {
         }
         
         if (def.namespace === 'mybricks.core-comlib.module') {//模块
-          const moduleId = com.ioProxyForCall?.frame.id
+          const moduleId = com.ioProxyForCall?.frame?.id
           if (moduleId) {
             if (!depsReg.find(now => now.namespace === def.namespace && now.version === def.version && now.moduleId === moduleId)) {
               depsReg.push({...def, moduleId})
