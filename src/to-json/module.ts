@@ -306,7 +306,7 @@ export function toFrameJSON(frame, regs: {
           debugger
         }
         
-        if (fPin.proxyPinValue) {//frameOutput
+        if (fPin.proxyPinValue) {//frameInput
           targetFrameKey = getFrameKey(fPin.proxyPinValue.parent)
         } else {
           //debugger
@@ -555,7 +555,7 @@ export function toFrameJSON(frame, regs: {
           const diagram = com.diagramModel
           const frameModel = diagram.parent
           if (frameModel && frameModel.diagramAry && !frameModel.diagramAry.find(dia => dia.id === diagram.id)) {//对应diagram已被删除
-            //console.log(com.runtime.title, '对应diagram已被删除')
+//console.log(com.runtime.title, '对应diagram已被删除')
             return
           }
         }
