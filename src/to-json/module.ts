@@ -5,12 +5,15 @@ import {getJSONDiff} from "../utils/json";
 export function toJSON({slot, frame}, opts: {
   needClone?: boolean,
   withMockData?: boolean,
+  withIOSchema?: boolean,
   onlyDiff?: {
     getComDef: () => {}
   }
 }) {
   const depsReg = []
   const comsReg = {}
+  
+  //console.log('withIOSchema....',opts.withIOSchema)
   
   // if(slot.title==='主场景'){
   //   debugger
@@ -158,6 +161,7 @@ export function toFrameJSON(frame, regs: {
 }, opts: {
   needClone?,
   withMockData?,
+  withIOSchema?,
   onlyDiff?: {
     getComDef: () => {}
   }
@@ -184,12 +188,27 @@ export function toFrameJSON(frame, regs: {
     //   debugger
     // }
     
-    // if(pin.title==='新增编辑项'){
+    // console.log(pin.title)
+    //
+    // if(pin.title==='新增输入项1'){
     //   debugger
     // }
     
     if (pin.rels) {
       pinRelsReg[`${idPre}-${pin.hostId}`] = pin.rels
+    } else {
+      if (pin.parent._type === 1) {//component
+        const parentCom = pin.parent
+        if (parentCom.runtime.def.namespace === 'mybricks.core-comlib.module') {//模块组件
+          const ioProxyForCall = parentCom.ioProxyForCall
+          if (ioProxyForCall && ioProxyForCall.frame) {
+            const proxyPin = ioProxyForCall.frame.inputPins?.find(ipt => ipt.id === pin.hostId)
+            if (proxyPin && proxyPin.rels) {
+              pinRelsReg[`${idPre}-${pin.hostId}`] = proxyPin.rels
+            }
+          }
+        }
+      }
     }
     
     if (pin.proxyScenePin) {
@@ -453,7 +472,7 @@ export function toFrameJSON(frame, regs: {
             id: pin.hostId,
             title: pin.title,
             type: pin.type,
-            schema: pin.schema,
+            schema: opts.withIOSchema?pin.schema:void 0,
             extValues: pin.extValues
           })
         }
@@ -486,7 +505,7 @@ export function toFrameJSON(frame, regs: {
             id: pin.hostId,
             title: pin.title,
             type: pin.type,
-            schema: pin.schema,
+            schema: opts.withIOSchema?pin.schema:void 0,
             extValues: pin.extValues,
             mockData: opts.withMockData ? pin.mockData : void 0,//添加mock数据
             mockDataType: opts.withMockData ? pin.mockDataType : void 0,
@@ -503,7 +522,7 @@ export function toFrameJSON(frame, regs: {
             id: pin.hostId,
             title: pin.title,
             type: pin.type,
-            schema: pin.schema
+            schema: opts.withIOSchema?pin.schema:void 0,
           })
         }
       })
@@ -516,7 +535,7 @@ export function toFrameJSON(frame, regs: {
             id: pin.hostId,
             title: pin.title,
             type: pin.type,
-            schema: pin.schema
+            schema: opts.withIOSchema?pin.schema:void 0,
           })
         }
         
@@ -649,6 +668,9 @@ export function toFrameJSON(frame, regs: {
         // if (comsReg[rt.id]) {
         //   debugger
         // }
+        
+        delete model.inputAry
+        delete model.outputAry
         
         comsReg[rt.id] = {
           id: rt.id,
