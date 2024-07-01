@@ -118,23 +118,35 @@ export function toSlotJSON(slot, {depsReg, comsReg}, frame, opts: {
       // const width = slot.$el ? slot.$el.offsetWidth : slot.width
       // const height = slot.$el ? slot.$el.offsetHeight : slot.height
       
-      const widthFact = slot.style.widthFact
-      const heightFact = slot.style.heightFact
-      
       // if(slot.title==='模块1'){
       //   debugger
       //
       //   console.log(slot.style)
       // }
-      //
+      
+      
+      
+      const widthFact = slot.style.widthFact
+      const heightFact = slot.style.heightFact
+      
+      // const style = Object.assign({},
+      //   slot.style, {
+      //     width: widthFact,
+      //     height: slot.showType === 'module' || slot.type === 'module' ? heightFact : undefined
+      //   })
       
       const style = Object.assign({},
         slot.style, {
           width: widthFact,
-          height: slot.showType === 'module' || slot.type === 'module' ? heightFact : undefined
+          height: heightFact
         })
       
-      //console.log(style)////TODO
+      //删除模块对应的位置信息
+      delete style.left
+      delete style.top
+      delete style.zoom
+      delete style.marginLeft
+      delete style.marginRight
       
       return {
         id: slot.id,
@@ -613,7 +625,7 @@ export function toFrameJSON(frame, regs: {
         //   debugger
         // }
         
-        // if(com.runtime.title==='模块2'){
+        // if(com.runtime.title==='图片'){
         //   debugger
         // }
         
