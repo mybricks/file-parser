@@ -3,7 +3,8 @@ import {toFrameJSON} from './module'
 
 export function toJSON(toplViewModel, opts: {
   needClone?: boolean,
-  withMockData?: boolean
+  withMockData?: boolean,
+  forDebug?: boolean
 }) {
   const comsReg = {}
   const consReg = {}
@@ -108,7 +109,7 @@ export function toJSON(toplViewModel, opts: {
         if (pinParent._type === 1) {//toplcom
           const realFPin = fPin.forkedFrom || fPin
           const realParentCom = pinParent.forkedFrom || pinParent
-
+          
           const startPinParentKey = con.startPin.parent._key
           const finishPinParentKey = con.finishPin.parent._key
           
@@ -126,7 +127,7 @@ export function toJSON(toplViewModel, opts: {
             direction: realFPin.direction,
             extBinding: realFPin.extBinding,
             isIgnored: con.isIgnored,
-            isBreakpoint: con.isBreakpoint
+            isBreakpoint: opts?.forDebug ? con.isBreakpoint : void 0/////TODO
           })
         } else {
           const realFPin = fPin.forkedFrom || fPin
@@ -150,7 +151,7 @@ export function toJSON(toplViewModel, opts: {
                 pinType: 'joint',
                 direction: forkedFromJointPin.direction,
                 isIgnored: con.isIgnored,
-                isBreakpoint: con.isBreakpoint
+                isBreakpoint: opts?.forDebug ? con.isBreakpoint : void 0
               }
               
               cons.push(nCon)//{frameId, comId, pinId}
@@ -176,7 +177,7 @@ export function toJSON(toplViewModel, opts: {
                 pinType: realFPin.type,
                 direction: realFPin.direction,
                 isIgnored: con.isIgnored,
-                isBreakpoint: con.isBreakpoint
+                isBreakpoint: opts?.forDebug ? con.isBreakpoint : void 0
               })//{frameId, comId, pinId}
             }
           }

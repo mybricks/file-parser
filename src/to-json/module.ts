@@ -3,6 +3,7 @@ import pkg from '../../package.json'
 import {getJSONDiff} from "../utils/json";
 
 export function toJSON({slot, frame}, opts: {
+  forDebug?: boolean,
   needClone?: boolean,
   withMockData?: boolean,
   withIOSchema?: boolean,
@@ -124,8 +125,6 @@ export function toSlotJSON(slot, {depsReg, comsReg}, frame, opts: {
       //   console.log(slot.style)
       // }
       
-      
-      
       const widthFact = slot.style.widthFact
       const heightFact = slot.style.heightFact
       
@@ -171,6 +170,7 @@ export function toFrameJSON(frame, regs: {
   depsReg,
   comsReg,
 }, opts: {
+  forDebug?: boolean,
   needClone?,
   withMockData?,
   withIOSchema?,
@@ -382,7 +382,7 @@ export function toFrameJSON(frame, regs: {
               direction: realFPin.direction,
               extBinding: realFPin.extBinding,
               isIgnored: con.isIgnored,
-              isBreakpoint: con.isBreakpoint
+              isBreakpoint: opts?.forDebug ? con.isBreakpoint : void 0
             }
             
             if (con.startPin.isStarter) {
@@ -413,7 +413,7 @@ export function toFrameJSON(frame, regs: {
                 pinType: 'joint',
                 direction: forkedFromJointPin.direction,
                 isIgnored: con.isIgnored,
-                isBreakpoint: con.isBreakpoint
+                isBreakpoint: opts?.forDebug ? con.isBreakpoint : void 0
               }
               
               cons.push(nCon)//{frameId, comId, pinId}
@@ -439,7 +439,7 @@ export function toFrameJSON(frame, regs: {
                 pinType: realFPin.type,
                 direction: realFPin.direction,
                 isIgnored: con.isIgnored,
-                isBreakpoint: con.isBreakpoint
+                isBreakpoint: opts?.forDebug ? con.isBreakpoint : void 0
               })//{frameId, comId, pinId}
             }
           }
@@ -484,7 +484,7 @@ export function toFrameJSON(frame, regs: {
             id: pin.hostId,
             title: pin.title,
             type: pin.type,
-            schema: opts.withIOSchema?pin.schema:void 0,
+            schema: opts.withIOSchema ? pin.schema : void 0,
             extValues: pin.extValues
           })
         }
@@ -517,7 +517,7 @@ export function toFrameJSON(frame, regs: {
             id: pin.hostId,
             title: pin.title,
             type: pin.type,
-            schema: opts.withIOSchema?pin.schema:void 0,
+            schema: opts.withIOSchema ? pin.schema : void 0,
             extValues: pin.extValues,
             mockData: opts.withMockData ? pin.mockData : void 0,//添加mock数据
             mockDataType: opts.withMockData ? pin.mockDataType : void 0,
@@ -534,7 +534,7 @@ export function toFrameJSON(frame, regs: {
             id: pin.hostId,
             title: pin.title,
             type: pin.type,
-            schema: opts.withIOSchema?pin.schema:void 0,
+            schema: opts.withIOSchema ? pin.schema : void 0,
           })
         }
       })
@@ -547,7 +547,7 @@ export function toFrameJSON(frame, regs: {
             id: pin.hostId,
             title: pin.title,
             type: pin.type,
-            schema: opts.withIOSchema?pin.schema:void 0,
+            schema: opts.withIOSchema ? pin.schema : void 0,
           })
         }
         
@@ -687,6 +687,7 @@ export function toFrameJSON(frame, regs: {
         comsReg[rt.id] = {
           id: rt.id,
           def,
+          isTemp: rt.isTemp,
           frameId: frame.parent ? frame.id : void 0,
           parentComId: frame.parent?.runtime?.id,
           title: rt.title,
