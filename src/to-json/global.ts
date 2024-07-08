@@ -126,8 +126,8 @@ export function toJSON(toplViewModel, opts: {
             pinType: realFPin.type,
             direction: realFPin.direction,
             extBinding: realFPin.extBinding,
-            isIgnored: con.isIgnored,
-            isBreakpoint: opts?.forDebug ? con.isBreakpoint : void 0/////TODO
+            isIgnored: opts?.forDebug ? con.isIgnored : void 0,
+            isBreakpoint: opts?.forDebug ? con.isBreakpoint : void 0
           })
         } else {
           const realFPin = fPin.forkedFrom || fPin
@@ -150,7 +150,7 @@ export function toJSON(toplViewModel, opts: {
                 pinId: pinHostId,
                 pinType: 'joint',
                 direction: forkedFromJointPin.direction,
-                isIgnored: con.isIgnored,
+                isIgnored: opts?.forDebug ? con.isIgnored : void 0,
                 isBreakpoint: opts?.forDebug ? con.isBreakpoint : void 0
               }
               
@@ -176,7 +176,7 @@ export function toJSON(toplViewModel, opts: {
                 pinId: realFPin.hostId,
                 pinType: realFPin.type,
                 direction: realFPin.direction,
-                isIgnored: con.isIgnored,
+                isIgnored: opts?.forDebug ? con.isIgnored : void 0,
                 isBreakpoint: opts?.forDebug ? con.isBreakpoint : void 0
               })//{frameId, comId, pinId}
             }

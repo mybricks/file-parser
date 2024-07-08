@@ -381,7 +381,7 @@ export function toFrameJSON(frame, regs: {
               pinType: realFPin.type,
               direction: realFPin.direction,
               extBinding: realFPin.extBinding,
-              isIgnored: con.isIgnored,
+              isIgnored: opts?.forDebug ? con.isIgnored : void 0,
               isBreakpoint: opts?.forDebug ? con.isBreakpoint : void 0
             }
             
@@ -412,7 +412,7 @@ export function toFrameJSON(frame, regs: {
                 pinId: pinHostId,
                 pinType: 'joint',
                 direction: forkedFromJointPin.direction,
-                isIgnored: con.isIgnored,
+                isIgnored: opts?.forDebug ? con.isIgnored : void 0,
                 isBreakpoint: opts?.forDebug ? con.isBreakpoint : void 0
               }
               
@@ -438,7 +438,7 @@ export function toFrameJSON(frame, regs: {
                 pinId: realFPin.hostId,
                 pinType: realFPin.type,
                 direction: realFPin.direction,
-                isIgnored: con.isIgnored,
+                isIgnored: opts?.forDebug ? con.isIgnored : void 0,
                 isBreakpoint: opts?.forDebug ? con.isBreakpoint : void 0
               })//{frameId, comId, pinId}
             }
