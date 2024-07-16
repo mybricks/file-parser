@@ -1,5 +1,6 @@
-import {toJSON} from './to-json/module'
-import {toJSON as toGlobalJSON} from './to-json/global'
+import {toJSON} from './to-json/forUIModule'
+import {toJSON as toGlobalJSON} from './to-json/forUIGlobal'
+import {toJSON as toServiceJSON} from './to-json/forService'
 import {parsePage, parseProject} from './rxui-parser'
 
 export function getGlobalJSON(toplViewModel, opts?: {
@@ -7,6 +8,13 @@ export function getGlobalJSON(toplViewModel, opts?: {
   withMockData?: boolean
 }) {
   return toGlobalJSON(toplViewModel, opts || {})
+}
+
+export function getServiceJSON(toplViewModel, opts?: {
+  needClone?: boolean,
+  withMockData?: boolean
+}) {
+  return toServiceJSON(toplViewModel, opts || {})
 }
 
 export function getJSONFromModule(module: {

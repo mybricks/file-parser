@@ -798,6 +798,10 @@ export function toFrameJSON(frame, regs: {
     
     if (frame.frameAry) {
       frame.frameAry.forEach(frame => {
+        if (frame.hostFrameId) {
+          return
+        }
+        
         scanFrame(frame)
       })
     }

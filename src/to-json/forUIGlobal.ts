@@ -1,5 +1,5 @@
 import * as Arrays from "../utils/arrays";
-import {toFrameJSON} from './module'
+import {toFrameJSON} from './forUIModule'
 
 export function toJSON(toplViewModel, opts: {
   needClone?: boolean,
@@ -251,7 +251,7 @@ export function toJSON(toplViewModel, opts: {
   
   if (toplViewModel.frames) {//全局Fx
     toplViewModel.frames.forEach(frame => {
-      if (frame.type === 'fx') {
+      if ((!frame.bizType || frame.bizType === 'ui') && frame.type === 'fx') {
         const frameJSON = toFrameJSON(frame, {}, opts)
         fxFrames.push(frameJSON)
       }
