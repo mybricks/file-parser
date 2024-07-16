@@ -22,21 +22,44 @@ export function getJSONFromModule(module: {
                                     frame
                                   },
                                   opts?: {
+                                    forMPA?: boolean,
                                     needClone?: boolean,
                                     withMockData?: boolean,
                                     onlyDiff?: {
                                       getComDef: () => {}
                                     }
                                   }) {
-  return toJSON(module, opts || {})
+  if (opts?.forMPA) {
+    const {slot, frame} = module
+    
+    const json = []
+    if (slot.slots && slot.slots.length > 0) {
+      slot.slots.forEach((curSlot, idx) => {
+        const curFrame = frame === null || frame === void 0 ? void 0 : frame.frameAry.find(frame => {
+          if (frame.id === curSlot.id) {
+            return frame;
+          }
+        })
+        
+        json.push(toJSON({
+          slot: curSlot,
+          frame: curFrame
+        }, opts || {}))
+      })
+    }
+    
+    return json
+  } else {
+    return toJSON(module, opts || {})
+  }
 }
 
-export function toJSONFromPageDump(pageJSON: string) {
+export function toJSONFromPageDump(pageJSON: string, opts?: { forMPA: boolean }) {
   const content = JSON.parse(pageJSON).content
   
   const temp = parsePage(content)
   
-  return getJSONFromModule(temp as any)
+  return getJSONFromModule(temp as any, opts)
 }
 
 export function toJSONFromProjectDump(pageJSON: string | { projectContent }) {
