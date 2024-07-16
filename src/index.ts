@@ -32,7 +32,10 @@ export function getJSONFromModule(module: {
   if (opts?.forMPA) {
     const {slot, frame} = module
     
-    const json = []
+    const json = [toJSON({
+      slot: slot,
+      frame: frame
+    }, opts || {})]
     if (slot.slots && slot.slots.length > 0) {
       slot.slots.forEach((curSlot, idx) => {
         const curFrame = frame === null || frame === void 0 ? void 0 : frame.frameAry.find(frame => {
