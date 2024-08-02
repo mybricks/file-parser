@@ -89,11 +89,34 @@ export function toSlotJSON(slot, {depsReg, comsReg}, frame, opts: {
           
           const model = opts.needClone ? JSON.parse(JSON.stringify(rt.model)) : rt.model
           
+          const style = {} as any
+          
+          const geoPtStyle = rt.geo.parent?.style
+          
+          if (geoPtStyle?.layout === 'absolute' || geoPtStyle?.layout === 'smart') {
+            delete model.style['marginTop']
+            delete model.style['marginRight']
+            delete model.style['marginBottom']
+            delete model.style['marginLeft']
+          }
+          
+          if (model.style) {
+            if (model.style.position === 'absolute') {
+              style.position = 'absolute'
+            }
+            
+            style.width = model.style.widthFact
+            style.height = model.style.heightFact
+          } else {
+            model.style = {}//兼容
+          }
+          
           comsReg[rt.id] = {
             id: rt.id,
             def,
             name: com.name,
             title: rt.title,
+            style,
             model
           }
         }
@@ -112,7 +135,8 @@ export function toSlotJSON(slot, {depsReg, comsReg}, frame, opts: {
         comAry.push({
           id: com.runtime.id,
           name: com.name,
-          def: com.runtime.def, slots
+          def: com.runtime.def,
+          slots
         })
       })
       
