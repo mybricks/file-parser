@@ -93,7 +93,9 @@ function deserialize<T>(data: { def, refs, D?, consts }): T {
   
   const serial = def
   
-  return _deserialize(serial)
+  const rtn =  _deserialize(serial)
+
+  return rtn
 }
 
 //------------------------------------------------------------------------------------------------------
