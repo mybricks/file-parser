@@ -36,6 +36,7 @@ export function getJSONFromModule(module: {
       slot: slot,
       frame: frame
     }, opts || {})]
+    
     if (slot.slots && slot.slots.length > 0) {
       slot.slots.forEach((curSlot, idx) => {
         const curFrame = frame === null || frame === void 0 ? void 0 : frame.frameAry.find(frame => {

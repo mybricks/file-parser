@@ -13,23 +13,23 @@ export function toJSON({slot, frame}, opts: {
 }) {
   const depsReg = []
   const comsReg = {}
-  
+
   //console.log('withIOSchema....',opts.withIOSchema)
-  
+
   // if(slot.title==='主场景'){
   //   debugger
   // }
-  
+
   let slotJSON
   if (slot) {
     slotJSON = toSlotJSON(slot, {depsReg, comsReg}, frame, opts)
   }
-  
+
   let frameJSON
   if (frame) {
     frameJSON = toFrameJSON(frame, {depsReg, comsReg}, opts)
   }
-  
+
   return Object.assign({
       '-v': pkg.version,
       deps: depsReg,
@@ -55,7 +55,7 @@ export function toSlotJSON(slot, {depsReg, comsReg}, frame, opts: {
     comAry,
     style
   }
-  
+
   const scanSlot = (slot) => {
     // let sid
     // if (slot.parent) {
@@ -66,18 +66,19 @@ export function toSlotJSON(slot, {depsReg, comsReg}, frame, opts: {
     // slotsReg[sid] = {
     //   type: slot.type
     // }
-    
+
     if (slot.comAry) {
       const comAry = []
       slot.comAry.forEach(com => {
+        const rt = com.runtime
+
         if (!frame) {//没有toplview的情况
-          const rt = com.runtime
           const def = rt.def
-          
+
           if (def.namespace === 'mybricks.core-comlib.selection') {//忽略选区组件
             return
           }
-          
+
           if (def.namespace === 'mybricks.core-comlib.module') {//模块
             const moduleId = com.proxySlot.id
             if (!depsReg.find(now => now.namespace === def.namespace && now.version === def.version && now.moduleId === moduleId)) {
@@ -86,31 +87,31 @@ export function toSlotJSON(slot, {depsReg, comsReg}, frame, opts: {
           } else if (!depsReg.find(now => now.namespace === def.namespace && now.version === def.version)) {
             depsReg.push(def)
           }
-          
+
           const model = opts.needClone ? JSON.parse(JSON.stringify(rt.model)) : rt.model
-          
+
           const style = {} as any
-          
+
           const geoPtStyle = rt.geo.parent?.style
-          
+
           if (geoPtStyle?.layout === 'absolute' || geoPtStyle?.layout === 'smart') {
             delete model.style['marginTop']
             delete model.style['marginRight']
             delete model.style['marginBottom']
             delete model.style['marginLeft']
           }
-          
+
           if (model.style) {
             if (model.style.position === 'absolute') {
               style.position = 'absolute'
             }
-            
+
             style.width = model.style.widthFact
             style.height = model.style.heightFact
           } else {
             model.style = {}//兼容
           }
-          
+
           comsReg[rt.id] = {
             id: rt.id,
             def,
@@ -120,7 +121,7 @@ export function toSlotJSON(slot, {depsReg, comsReg}, frame, opts: {
             model
           }
         }
-        
+
         let slots
         if (com.slots) {
           slots = {}
@@ -131,7 +132,30 @@ export function toSlotJSON(slot, {depsReg, comsReg}, frame, opts: {
             }
           })
         }
-        
+
+        // if(rt.id==='u_QrQxJ'){
+        //   debugger
+        // }
+
+        if (rt.topl) {
+          const topl = rt.topl
+          if (topl.frames) {
+            topl.frames.forEach(frame => {
+              slots = slots || {}
+
+              if (!slots[frame.id]) {//兼容之前的数据（例如因为defer的原因，upload组件之前在UI中没有对应的slot）
+                slots[frame.id] = {
+                  id: frame.id,
+                  title: frame.title,
+                  type: frame.type,
+                  comAry: [],
+                  style: {}
+                }
+              }
+            })
+          }
+        }
+
         comAry.push({
           id: com.runtime.id,
           name: com.name,
@@ -139,38 +163,38 @@ export function toSlotJSON(slot, {depsReg, comsReg}, frame, opts: {
           slots
         })
       })
-      
+
       // const width = slot.$el ? slot.$el.offsetWidth : slot.width
       // const height = slot.$el ? slot.$el.offsetHeight : slot.height
-      
+
       // if(slot.title==='模块1'){
       //   debugger
       //
       //   console.log(slot.style)
       // }
-      
+
       const widthFact = slot.style.widthFact
       const heightFact = slot.style.heightFact
-      
+
       // const style = Object.assign({},
       //   slot.style, {
       //     width: widthFact,
       //     height: slot.showType === 'module' || slot.type === 'module' ? heightFact : undefined
       //   })
-      
+
       const style = Object.assign({},
         slot.style, {
           width: widthFact,
           height: heightFact
         })
-      
+
       //删除模块对应的位置信息
       delete style.left
       delete style.top
       delete style.zoom
       delete style.marginLeft
       delete style.marginRight
-      
+
       return {
         id: slot.id,
         title: slot.title,
@@ -182,11 +206,11 @@ export function toSlotJSON(slot, {depsReg, comsReg}, frame, opts: {
       }
     }
   }
-  
+
   if (slot) {
     ui = scanSlot(slot)
   }
-  
+
   return ui
 }
 
@@ -204,32 +228,32 @@ export function toFrameJSON(frame, regs: {
 }) {
   const depsReg = regs.depsReg || []
   const comsReg = regs.comsReg || {}
-  
+
   const _inputsReg = []
   const _outputsReg = []
-  
+
   const inputsReg = []
   const outputsReg = []
-  
+
   const pinRelsReg = {}
   const pinProxyReg = {}
   const pinValueProxyReg = {}
   const consReg = {}
   //const slotsReg = {}
-  
+
   const comsAutoRun = {}
-  
+
   const scanInputPin = (pin, idPre) => {
     // if(pin.title==='打开'&&pin.proxyPin?._todo_){
     //   debugger
     // }
-    
+
     // console.log(pin.title)
     //
     // if(pin.title==='新增输入项1'){
     //   debugger
     // }
-    
+
     if (pin.rels) {
       pinRelsReg[`${idPre}-${pin.hostId}`] = pin.rels
     } else {
@@ -246,7 +270,7 @@ export function toFrameJSON(frame, regs: {
         }
       }
     }
-    
+
     if (pin.proxyScenePin) {
       const {sceneId, hostId} = pin.proxyScenePin
       pinProxyReg[`${idPre}-${pin.hostId}`] = {
@@ -255,7 +279,16 @@ export function toFrameJSON(frame, regs: {
         pinId: hostId
       }
     }
-    
+
+    if (pin.proxyMyFramePin) {
+      const {frameId, pinId} = pin.proxyMyFramePin
+      pinProxyReg[`${idPre}-${pin.hostId}`] = {
+        type: 'myFrame',
+        frameId,
+        pinId
+      }
+    }
+
     if (pin.proxyPin) {
       if (pin.proxyPin._todo_) {
         const {frameId, pinId, pinHostId} = pin.proxyPin
@@ -268,7 +301,11 @@ export function toFrameJSON(frame, regs: {
         const comOrFrame = pin.proxyPin.parent
         if (comOrFrame && comOrFrame._type === 0) {//frame
           const frameId = comOrFrame.id
-          
+
+          if (pinProxyReg[`${idPre}-${pin.hostId}`]) {
+            debugger
+          }
+
           pinProxyReg[`${idPre}-${pin.hostId}`] = {
             type: 'frame',
             frameId,
@@ -277,12 +314,12 @@ export function toFrameJSON(frame, regs: {
         }
       }
     }
-    
+
     if (pin.proxyPinValue) {
       const comOrFrame = pin.proxyPinValue.parent
       if (comOrFrame && comOrFrame._type === 0) {//frame
         const frameId = comOrFrame.id
-        
+
         pinValueProxyReg[`${idPre}-${pin.hostId}`] = {
           type: 'frame',
           frameId,
@@ -290,17 +327,17 @@ export function toFrameJSON(frame, regs: {
         }
       }
     }
-    
+
     if (pin.editor) {
-    
+
     }
   }
-  
+
   const scanOutputPin = (pin, idPre) => {
     // if(pin.title==='ABC'){
     //   debugger
     // }
-    
+
     if (pin.proxyPin) {
       if (pin.proxyPin._todo_) {
         const {frameId, pinId, pinHostId} = pin.proxyPin
@@ -313,11 +350,11 @@ export function toFrameJSON(frame, regs: {
         const comOrFrame = pin.proxyPin.parent
         if (comOrFrame && comOrFrame._type === 0) {//frame
           const frameId = comOrFrame.id
-          
+
           if (comOrFrame) {
-          
+
           }
-          
+
           pinProxyReg[`${idPre}-${pin.hostId}`] = {
             type: 'frame',
             frameId,
@@ -326,71 +363,76 @@ export function toFrameJSON(frame, regs: {
         }
       }
     }
-    
+
     if (pin.conAry?.length > 0) {
       const cons = []
       pin.conAry.forEach(con => {
         let frameKey,
           targetFrameKey//组件实际所在的frame，例如frameOut组件可能是上级frame的
-        
+
         const fPin = con.finishPin
         if (!fPin) {
           return
         }
-        
+
+        if (cons.find(tc => tc.id === con.id)) {
+          debugger
+          return//重复连接
+        }
+
         // if(fPin.title==='获取'){
         //   debugger
         // }
-        
+
         let timerPinInputId
-        
+
         if (!fPin.parent) {
           debugger
         }
-        
+
         if (fPin.parent) {
           if (fPin.parent.timerInputPin) {
             timerPinInputId = fPin.parent.timerInputPin.id
           }
         }
-        
+
         const frame = con.parent.parent
         if (frame) {//frame 可能不存在（对应的diagramModelparent为空)
           frameKey = getFrameKey(frame)
         } else {
           debugger
         }
-        
+
         if (fPin.proxyPinValue) {//frameInput
           targetFrameKey = getFrameKey(fPin.proxyPinValue.parent)
         } else {
           //debugger
-          
+
           targetFrameKey = frameKey
         }
-        
+
         // if(fPin.parent._type === 1&&fPin.parent.isFrameIn()){//frameOutput
         //   targetFrameKey = getFrameKey(fPin.parent.parent)
         // }else{
         //   targetFrameKey = frameKey
         // }
-        
+
         const pinParent = fPin.parent
         if (pinParent?._type === 1) {//toplcom
           const realFPin = fPin.forkedFrom || fPin
           const realParentCom = pinParent.forkedFrom || pinParent
-          
+
           if (realParentCom && (realParentCom.runtime || realParentCom._todo_ && realParentCom.comId)) {//realParentCom._todo&&realParentCom.comId 全局变量
             // if(!realParentCom.runtime){
             //   debugger
             // }
-            
+
             const parentComId = realParentCom.runtime?.id || realParentCom.comId
             const parentComDef = realParentCom.runtime?.def || realParentCom.def
-            
+
             const startPinParentKey = con.startPin.parent._key
             const finishPinParentKey = con.finishPin.parent._key
-            
+
             const conReg = {
               id: con.id,
               type: 'com',
@@ -408,24 +450,24 @@ export function toFrameJSON(frame, regs: {
               isIgnored: opts?.forDebug ? con.isIgnored : void 0,
               isBreakpoint: opts?.forDebug ? con.isBreakpoint : void 0
             }
-            
+
             if (con.startPin.isStarter) {
               delete conReg.startPinParentKey
             }
-            
+
             cons.push(conReg)
           }
         } else {
           const realFPin = fPin.forkedFrom || fPin
-          
+
           const fp = realFPin.parent
           if (fp._type === 0) {//frame
             const forkedFromJointPin = realFPin.forkedAsJoint//joint
             if (forkedFromJointPin) {
               const pinHostId = forkedFromJointPin.from?.hostId || forkedFromJointPin.hostId
-              
+
               const startPinParentKey = con.startPin.parent?._key
-              
+
               const nCon = {
                 id: con.id,
                 type: 'frame',
@@ -439,18 +481,18 @@ export function toFrameJSON(frame, regs: {
                 isIgnored: opts?.forDebug ? con.isIgnored : void 0,
                 isBreakpoint: opts?.forDebug ? con.isBreakpoint : void 0
               }
-              
+
               cons.push(nCon)//{frameId, comId, pinId}
-              
+
               const newIdPre = `${nCon.comId ? nCon.comId + '-' : ''}${nCon.frameId}`
-              
+
               scanOutputPin(forkedFromJointPin, newIdPre)//scan for it
             } else {
               // if (!realFPin.hostId) {
               //   debugger
               // }
               const startPinParentKey = con.startPin.parent?._key
-              
+
               const comId = fp.parent?._type === 1 ? fp.parent.runtime.id : void 0//toplcom
               cons.push({
                 id: con.id,
@@ -469,7 +511,7 @@ export function toFrameJSON(frame, regs: {
           }
         }
       })
-      
+
       if (cons.length > 0) {
         let pinHostId
         if (pin.from && pin.from.hostId) {//joint
@@ -477,17 +519,26 @@ export function toFrameJSON(frame, regs: {
         } else {
           pinHostId = pin.hostId
         }
-        
+
         // if(!pinHostId){
         //   debugger
         // }
-        
+
         consReg[`${idPre}-${pinHostId}`] = cons
       }
     }
   }
-  
+
   const scanFrame = (frame) => {
+    const defs = {
+      id: frame.id,
+      title: frame.title,
+      _inputs: [],
+      _outputs: [],
+      inputs: [],
+      outputs: []
+    }
+
     if (frame._inputPins) {
       frame._inputPins.forEach(pin => {
         let idPre
@@ -498,11 +549,11 @@ export function toFrameJSON(frame, regs: {
         } else {
           idPre = '_rootFrame_'//_rootFrame_
         }
-        
+
         scanOutputPin(pin, idPre)
-        
+
         scanInputPin(pin, idPre)//scan rels
-        
+
         if (!frame.parent) {//root
           _inputsReg.push({
             id: pin.hostId,
@@ -512,15 +563,23 @@ export function toFrameJSON(frame, regs: {
             extValues: pin.extValues
           })
         }
+
+        defs._inputs.push({
+          id: pin.hostId,
+          title: pin.title,
+          type: pin.type,
+          schema: opts.withIOSchema ? pin.schema : void 0,
+          extValues: pin.extValues
+        })
       })
     }
-    
+
     // console.log(frame.title)
     //
     // if (frame.title === '全局Fx卡片1') {
     //   debugger
     // }
-    
+
     if (frame.inputPins) {
       frame.inputPins.forEach(pin => {
         let idPre
@@ -531,11 +590,11 @@ export function toFrameJSON(frame, regs: {
         } else {
           idPre = '_rootFrame_'//_rootFrame_
         }
-        
+
         scanOutputPin(pin, idPre)
-        
+
         scanInputPin(pin, idPre)//scan rels
-        
+
         if (!frame.parent) {//root
           inputsReg.push({
             id: pin.hostId,
@@ -548,9 +607,22 @@ export function toFrameJSON(frame, regs: {
             editor: pin.editor
           })
         }
+
+        defs.inputs.push(
+          {
+            id: pin.hostId,
+            title: pin.title,
+            type: pin.type,
+            schema: opts.withIOSchema ? pin.schema : void 0,
+            extValues: pin.extValues,
+            mockData: opts.withMockData ? pin.mockData : void 0,//添加mock数据
+            mockDataType: opts.withMockData ? pin.mockDataType : void 0,
+            editor: pin.editor
+          }
+        )
       })
     }
-    
+
     if (frame._outputPins) {
       frame._outputPins.forEach(pin => {
         if (!frame.parent) {//root
@@ -561,9 +633,18 @@ export function toFrameJSON(frame, regs: {
             schema: opts.withIOSchema ? pin.schema : void 0,
           })
         }
+
+        defs._outputs.push(
+          {
+            id: pin.hostId,
+            title: pin.title,
+            type: pin.type,
+            schema: opts.withIOSchema ? pin.schema : void 0
+          }
+        )
       })
     }
-    
+
     if (frame.outputPins) {
       frame.outputPins.forEach(pin => {
         if (!frame.parent) {//root
@@ -574,14 +655,23 @@ export function toFrameJSON(frame, regs: {
             schema: opts.withIOSchema ? pin.schema : void 0,
           })
         }
-        
+
         if (pin.type === 'event' || pin.type === 'shortcut') {
           let idPre = '_rootFrame_'//_rootFrame_
           scanOutputPin(pin, idPre)
         }
+
+        defs.outputs.push(
+          {
+            id: pin.hostId,
+            title: pin.title,
+            type: pin.type,
+            schema: opts.withIOSchema ? pin.schema : void 0
+          }
+        )
       })
     }
-    
+
     // if (frame.outputJoints) {
     //   frame.outputJoints.forEach(pin => {
     //     if (!frame.parent) {//root
@@ -594,18 +684,18 @@ export function toFrameJSON(frame, regs: {
     //     }
     //   })
     // }
-    
+
     if (frame.comAry) {
       frame.comAry.forEach(com => {
         // if (com.title === '按钮1' && com.id === 'u_zJFoV') {
         //   console.log(com.id)
         //   debugger
         // }
-        
+
         if (!com || !com.runtime) {//可能存在组件已损坏的情况
           return
         }
-        
+
         if (com.diagramModel) {//校验对应diagram是否已被删除的情况
           const diagram = com.diagramModel
           const frameModel = diagram.parent
@@ -614,19 +704,19 @@ export function toFrameJSON(frame, regs: {
             return
           }
         }
-        
+
         const rt = com.runtime
-        
+
         // if (rt.id === 'u_6CUxt') {
         //   debugger
         // }
-        
+
         const def = rt.def
-        
+
         if (def.namespace === 'mybricks.core-comlib.selection') {//忽略选区组件
           return
         }
-        
+
         if (def.namespace === 'mybricks.core-comlib.module') {//模块
           const moduleId = com.ioProxyForCall?.frame?.id
           if (moduleId) {
@@ -637,78 +727,106 @@ export function toFrameJSON(frame, regs: {
         } else if (!depsReg.find(now => now.namespace === def.namespace && now.version === def.version)) {
           depsReg.push(def)
         }
-        
+
         const configPinIdAry = []
         const _inputPinIdAry = []
         const inputPinIdAry = []
         const outPinIdAry = []
-        
+
         const geo = rt.geo
-        
+
         // if(com.runtime.title==='自定义容器12'){
         //   debugger
         // }
-        
+
         // if(com.runtime.title==='图片'){
         //   debugger
         // }
-        
+
         let model = opts.needClone ? JSON.parse(JSON.stringify(rt.model)) : rt.model
-        
+
+        if (model.extSourceCodes) {
+          if (opts.needClone) {
+            delete model.extSourceCodes
+          }
+
+          model.isAICode = true
+        }
+
         if (rt.modelForToJSON) {
           model = Object.assign({}, model, rt.modelForToJSON)//合并
           rt.modelForToJSON = void 0//清除
         }
-        
+
         if (Array.isArray(model.outputAry)) {//简化
           model.outputAry = model.outputAry.map(item => {
             return item.hostId
           })
         }
-        
+
         const style = {} as any
-        
+
         if (rt.geo) {
           //debugger
           const geoPtStyle = rt.geo.parent?.style
-          
+
           if (geoPtStyle?.layout === 'absolute' || geoPtStyle?.layout === 'smart') {
             delete model.style['marginTop']
             delete model.style['marginRight']
             delete model.style['marginBottom']
             delete model.style['marginLeft']
           }
-          
+
           if (model.style) {
             if (model.style.position === 'absolute') {
               style.position = 'absolute'
             }
-            
+
             style.width = model.style.widthFact
             style.height = model.style.heightFact
           } else {
             model.style = {}//兼容
           }
-          
-          
+
+
           // if(rt.geo.$el){
           //   if(rt.geo.$el.offsetHeight!==model.style.heightFact){
           //     debugger
           //   }
           // }
-          
+
           // style.width = rt.geo.$el ? rt.geo.$el.offsetWidth : void 0
           // style.height = rt.geo.$el ? rt.geo.$el.offsetHeight : void 0
         }
-        
+
         // if (comsReg[rt.id]) {
         //   debugger
         // }
-        
+
         delete model.inputAry
         delete model.outputAry
-        
-        comsReg[rt.id] = {
+
+        // console.log(model.runtime?.title)
+        //
+        // if (rt.title === '组件的Fx卡片0') {
+        //   debugger
+        // }
+
+        if (com.ioProxy && com.ioProxy._type === 0) {//fx,处理fx中配置项的默认值
+          let configs
+          com.ioProxy.inputPins.forEach(pin => {
+            if (pin.type === 'config' && pin.extValues?.config?.defaultValue) {
+              configs = configs || {}
+              configs[pin.hostId] = pin.extValues.config.defaultValue
+            }
+          })
+
+          if (configs) {
+            model.data.configs = configs
+          }
+        }
+
+        const comReg = {
           id: rt.id,
           def,
           isTemp: rt.isTemp,
@@ -724,60 +842,67 @@ export function toFrameJSON(frame, regs: {
           //timerInput: void 0,
           _inputs: _inputPinIdAry,
           inputs: inputPinIdAry,
-          outputs: outPinIdAry
+          outputs: outPinIdAry,
+          frames: void 0
         }
-        
+
+        comsReg[rt.id] = comReg
+
         if (opts.onlyDiff
           //&& typeof opts.onlyDiff.getComDef === 'function'
         ) {
           const comDef = opts.onlyDiff.getComDef(def)
           if (comDef) {
             const oriData = comDef.data
-            
+
             model.data = getJSONDiff(model.data, oriData)
-            
+
             if (!def.rtType?.match(/^js/)) {//忽略js组件的inputs
               delete comsReg[rt.id].inputs
               delete comsReg[rt.id].outputs
             }
-            
+
             delete comsReg[rt.id].configs
             delete comsReg[rt.id]._inputs
-            
+
             //console.log(oriData, model.data, diffData)
           }
         }
-        
+
         // if(com.title==='对话框'){
         //   debugger
         // }
-        
+
         if (com.configPins) {
           com.configPins.forEach(pin => {
             configPinIdAry.push(pin.hostId)
           })
         }
-        
+
         if (com.timerInput) {
           scanInputPin(com.timerInput, rt.id)
           comsReg[rt.id].timerInput = com.timerInput.hostId
         }
-        
+
         Arrays.each(pin => {
             scanInputPin(pin, rt.id)
             _inputPinIdAry.push(pin.hostId)
           }, com._inputPins
         )
-        
+
         Arrays.each(pin => {
+            // if(pin.title.indexOf('新增扩展输入项')>=0){
+            //   debugger
+            // }
             scanInputPin(pin, rt.id)
             inputPinIdAry.push(pin.hostId)
           },
           com.inputPins,
           com.inputPinsInModel,
           com.inputPinExts,
+          com.inputPinExtForFrames,
         )
-        
+
         Arrays.each(pin => {
             scanOutputPin(pin, rt.id)
             outPinIdAry.push(pin.hostId)
@@ -789,7 +914,7 @@ export function toFrameJSON(frame, regs: {
         // if (com.runtime.def.rtType === 'js') {
         //
         // }
-        
+
         if (rt._autoRun && def.rtType?.match(/^js/)) {
           let idPre
           if (frame.parent) {
@@ -811,33 +936,39 @@ export function toFrameJSON(frame, regs: {
             def
           })
         }
-        
+
         if (com.frames) {
+          const frames = comReg.frames = []
+
           com.frames.forEach(frame => {
-            scanFrame(frame)
+            const def = scanFrame(frame)
+            frames.push(def)
           })
         }
       })
     }
-    
+
     if (frame.frameAry) {
       frame.frameAry.forEach(frame => {
         if (frame.hostFrameId) {
           return
         }
-        
+
         scanFrame(frame)
       })
     }
+
+    return defs
   }
-  
+
   if (frame) {
     scanFrame(frame)
   }
-  
+
   return {
     '-v': pkg.version,
     id: frame.id,
+    name: frame.name,
     title: frame.title,
     type: frame.type,
     deps: depsReg,

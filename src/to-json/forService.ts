@@ -84,6 +84,11 @@ export function toJSON(toplViewModel, opts: {
           return
         }
         
+        if(cons.find(tc=>tc.id===con.id)){
+          debugger
+          return//重复连接
+        }
+        
         let timerPinInputId
         if (fPin.parent.timerInputPin) {
           timerPinInputId = fPin.parent.timerInputPin.id

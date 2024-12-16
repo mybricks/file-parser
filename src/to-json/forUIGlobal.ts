@@ -84,6 +84,11 @@ export function toJSON(toplViewModel, opts: {
           return
         }
         
+        if (cons.find(tc => tc.id === con.id)) {
+          debugger
+          return//重复连接
+        }
+        
         let timerPinInputId
         if (fPin.parent.timerInputPin) {
           timerPinInputId = fPin.parent.timerInputPin.id
@@ -250,11 +255,18 @@ export function toJSON(toplViewModel, opts: {
       })
     }
     
-    if (toplViewModel.frames) {//全局Fx
+    if (toplViewModel.frames) {//全局Fx与extension类型
       toplViewModel.frames.forEach(frame => {
-        if ((!frame.bizType || frame.bizType === 'ui') && frame.type === 'fx') {
-          const frameJSON = toFrameJSON(frame, {}, opts)
-          fxFrames.push(frameJSON)
+        if ((!frame.bizType || frame.bizType === 'ui')) {
+          if (frame.type === 'fx') {
+            const frameJSON = toFrameJSON(frame, {}, opts)
+            fxFrames.push(frameJSON)
+          }
+          
+          if (frame.type === 'extension') {
+            const frameJSON = toFrameJSON(frame, {}, opts)
+            fxFrames.push(frameJSON)
+          }
         }
       })
     }
