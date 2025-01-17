@@ -1,6 +1,7 @@
 import * as Arrays from '../utils/arrays'
 import pkg from '../../package.json'
 import {getJSONDiff} from "../utils/json";
+import {COM_NS_FX, COM_NS_MODULE, COM_NS_SELECTION} from "../constants";
 
 export function toJSON({slot, frame}, opts: {
   forDebug?: boolean,
@@ -75,11 +76,11 @@ export function toSlotJSON(slot, {depsReg, comsReg}, frame, opts: {
         if (!frame) {//没有toplview的情况
           const def = rt.def
 
-          if (def.namespace === 'mybricks.core-comlib.selection') {//忽略选区组件
+          if (def.namespace === COM_NS_SELECTION) {//忽略选区组件
             return
           }
 
-          if (def.namespace === 'mybricks.core-comlib.module') {//模块
+          if (def.namespace === COM_NS_MODULE) {//模块
             const moduleId = com.proxySlot.id
             if (!depsReg.find(now => now.namespace === def.namespace && now.version === def.version && now.moduleId === moduleId)) {
               depsReg.push({...def, moduleId})
@@ -259,7 +260,7 @@ export function toFrameJSON(frame, regs: {
     } else {
       if (pin.parent._type === 1) {//component
         const parentCom = pin.parent
-        if (parentCom.runtime.def.namespace === 'mybricks.core-comlib.module') {//模块组件
+        if (parentCom.runtime.def.namespace === COM_NS_MODULE) {//模块组件
           const ioProxyForCall = parentCom.ioProxyForCall
           if (ioProxyForCall && ioProxyForCall.frame) {
             const proxyPin = ioProxyForCall.frame.inputPins?.find(ipt => ipt.id === pin.hostId)
@@ -396,11 +397,11 @@ export function toFrameJSON(frame, regs: {
           }
         }
 
-        const frame = con.parent.parent
+        const frame = con.parent?.parent
         if (frame) {//frame 可能不存在（对应的diagramModelparent为空)
           frameKey = getFrameKey(frame)
         } else {
-          debugger
+          //debugger
         }
 
         if (fPin.proxyPinValue) {//frameInput
@@ -713,11 +714,11 @@ export function toFrameJSON(frame, regs: {
 
         const def = rt.def
 
-        if (def.namespace === 'mybricks.core-comlib.selection') {//忽略选区组件
+        if (def.namespace === COM_NS_SELECTION) {//忽略选区组件
           return
         }
 
-        if (def.namespace === 'mybricks.core-comlib.module') {//模块
+        if (def.namespace === COM_NS_MODULE) {//模块
           const moduleId = com.ioProxyForCall?.frame?.id
           if (moduleId) {
             if (!depsReg.find(now => now.namespace === def.namespace && now.version === def.version && now.moduleId === moduleId)) {
@@ -826,6 +827,15 @@ export function toFrameJSON(frame, regs: {
           }
         }
 
+        let ioProxy
+
+        if (def.namespace === COM_NS_FX) {//fn
+          ioProxy = {
+            id: com.ioProxy?.id,
+            type: 'fx'
+          }
+        }
+
         const comReg = {
           id: rt.id,
           def,
@@ -843,7 +853,8 @@ export function toFrameJSON(frame, regs: {
           _inputs: _inputPinIdAry,
           inputs: inputPinIdAry,
           outputs: outPinIdAry,
-          frames: void 0
+          frames: void 0,
+          ioProxy
         }
 
         comsReg[rt.id] = comReg

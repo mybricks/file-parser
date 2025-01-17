@@ -8,3 +8,9 @@ export const META_HASHCODE = '_hc_'
 export const META_IGNORE = '_ignore_'
 
 export const TEMP_MERGEDATA = '_merge_data_'
+
+export const COM_NS_FX = `mybricks.core-comlib.fn`
+
+export const COM_NS_SELECTION = `mybricks.core-comlib.selection`
+
+export const COM_NS_MODULE = `mybricks.core-comlib.module`

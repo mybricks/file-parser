@@ -1,4 +1,3 @@
-import * as Arrays from "../utils/arrays";
 import {toFrameJSON} from './forUIModule'
 
 export function toJSON(toplViewModel, opts: {

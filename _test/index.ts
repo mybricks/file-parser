@@ -3,10 +3,10 @@ import {readFileSync, writeFileSync} from "fs";
 import {resolve} from "path";
 
 (async () => {
-  const contentJson = await readFileSync(resolve(__dirname, "dump-page.json"))
+  const contentJson = await readFileSync(resolve(__dirname, "mybricks_dump_2024-12-16 20_11_48.json"))
   //global JSON
   const json = JSON.parse(contentJson.toString())
-  const resultContent = parsePage(json.content)//meta 单页测试
+  const resultContent = parsePage(json.content['xg.desn.stageview'])//meta 单页测试
 
   //render-web.transformToJSON(global,resultContent)
 
