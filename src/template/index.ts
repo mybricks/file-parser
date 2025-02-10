@@ -1,7 +1,7 @@
 import {getSlotPrompts} from "./getGeoSource";
 import {getToplSource} from "./getToplSource";
 
-export function getTemplateForPage(page: {
+export function getPageTemplateJSON(page: {
   slot,
   frame
 }) {
