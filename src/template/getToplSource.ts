@@ -1,0 +1,268 @@
+import {COM_NS_FX, COM_NS_SCENE, COM_NS_VAR} from "../constants";
+
+export function getToplSource(frame) {
+  const result = {
+    scenes: []
+  }
+
+  if (frame.frames) {
+    frame.frames.forEach(frame => {
+      const frameJSON = proFrame(frame)
+      if (frameJSON) {
+        result.scenes.push(frameJSON)
+      }
+    })
+  }
+
+  return result
+}
+
+function proFrame(frame) {
+  const inputs = [],
+    outputs = [],
+    frames = [],
+    diagrams = [],
+    comAry = []
+
+  let type
+
+  if (frame.parent?._type === 0) {
+    if (frame.isTypeOfFx()) {
+      type = 'fx'
+    } else {
+      type = 'frame'
+    }
+  } else if (frame.parent?.runtime) {
+    type = 'com'
+  } else {
+    type = 'scene'
+  }
+
+  if (frame.inputPins) {
+    frame.inputPins.forEach(pin => {
+      //if (!frame.parent) {//root
+      inputs.push({
+        pinId: pin.hostId,
+        title: pin.title,
+        type: pin.type,
+        schema: pin.schema,
+        extValues: pin.extValues
+      })
+      //}
+
+      //scanOutputPin(pin as PinModel, idPre)
+    })
+  }
+
+  if (frame.outputPins) {
+    frame.outputPins.forEach(pin => {
+      //if (!frame.parent) {//root
+      outputs.push({
+        id: pin.hostId,
+        title: pin.title,
+        type: pin.type,
+        schema: pin.schema
+      })
+      //}
+    })
+  }
+
+  if (frame.frameAry) {
+    frame.frameAry.forEach(frame => {
+      if (frame.diagramAry.length > 0) {
+        const frameJSON = proFrame(frame)
+        frames.push(frameJSON)
+      }
+    })
+  }
+
+  if (frame.diagramAry) {
+    frame.diagramAry.forEach(diagram => {
+      const json = proDiagram(diagram)
+      if (json) {
+        diagrams.push(json)
+      }
+    })
+  }
+
+  if (frame.comAry) {
+    frame.comAry.forEach(com => {
+      const json = proCom(com)
+      if (json) {
+        comAry.push(json)
+      }
+    })
+  }
+
+  if (diagrams.length <= 0 && frames.length <= 0 && comAry.length <= 0) {
+    return
+  }
+
+  const frameJSON = {
+    id: frame.id,
+    title: frame.diagramAry[0].title,
+    type
+  } as any
+
+  if (comAry.length > 0) {
+    frameJSON.comAry = comAry
+  }
+
+  if (diagrams.length > 0) {
+    frameJSON.diagrams = diagrams
+  }
+
+  if (frame.comAry) {
+    if (comAry.length > 0) {
+      frameJSON.comAry = comAry
+    }
+  }
+
+  if (frames.length > 0) {
+    frameJSON.frames = frames
+  }
+
+  // if (inputs.length > 0) {
+  //   frameJSON.inputs = inputs
+  // }
+  //
+  // if (outputs.length > 0) {
+  //   frameJSON.outputs = outputs
+  // }
+
+  return frameJSON
+}
+
+function proCom(com) {
+  if (com.frames) {
+    const frames = []
+    com.frames.forEach(frame => {
+      const frameJSON = proFrame(frame)
+      if (frameJSON) {
+        frames.push(frameJSON)
+      }
+    })
+
+    if (frames.length > 0) {
+      const comJSON = {
+        id: com.id,
+        title: com.runtime.title,
+        frameAry: frames
+      }
+
+      return comJSON
+    }
+  }
+}
+
+function proDiagram(diagram) {
+  if (diagram.conAry.length <= 0) {
+    return
+  }
+
+  const comAry = []
+  const connections = []
+
+  const diagramJson = {
+    id: diagram.id,
+    title: diagram.title,
+    comAry,
+    connections
+  } as any
+
+  if (diagram.startWithCom) {
+    diagramJson.type = 'event'
+    diagramJson.from = {
+      com: {
+        id: diagram.startWithCom.id,
+        title: diagram.startWithCom.runtime.title,
+        pinId: diagram.startWithCom.outputPins[0].hostId
+      }
+    }
+  }
+
+  if (diagram.comAry.length > 0) {
+    diagram.comAry.forEach(com => {
+      let type
+      if (com.runtime.hasUI()) {
+        type = 'ui'
+      } else if (com.runtime.def.namespace === COM_NS_SCENE) {
+        type = 'scene'
+      } else if (com.runtime.def.namespace === COM_NS_VAR) {
+        type = 'var'
+      } else if (com.runtime.def.namespace === COM_NS_FX) {
+        type = 'fx'
+      } else {
+        type = 'js'
+      }
+// if(com.runtime.title.indexOf('表格')>=0){
+//   debugger
+// }
+      const allInputs = com.getAllInputsInfo()
+      const inputs = allInputs?.map(input => {
+        return {
+          id: input.hostId,
+          title: input.title
+        }
+      })
+
+      const allOutputs = com.getAllOutputsInfo()
+      const outputs = allOutputs?.map(output => {
+        return {
+          id: output.hostId,
+          title: output.title
+        }
+      })
+
+      const comJSON = {
+        id: com.id,
+        title: com.runtime.title,
+        namespace: com.runtime.def.namespace,
+        type,
+        style: com.style,
+        inputs,
+        outputs
+      } as any
+
+      if (!com.runtime.hasUI()) {
+        comJSON.data = com.runtime.model.data
+      }
+
+      comAry.push(comJSON)
+    })
+  }
+
+  diagram.conAry.forEach(con => {
+    const startPin = con.startPin
+    const finishPin = con.finishPin
+
+    const connection = {
+      from: {
+        com: {
+          id: startPin.parent.id,
+          title: startPin.parent.runtime.title
+        },
+        pin: {
+          id: startPin.hostId,
+          title: startPin.title,
+          position: con.startPo
+        }
+      },
+      to: {
+        com: {
+          id: finishPin.parent.id,
+          title: finishPin.parent.runtime.title
+        },
+        pin: {
+          id: finishPin.hostId,
+          title: finishPin.title,
+          position: con.finishPo
+        }
+      }
+    }
+
+    connections.push(connection)
+  })
+
+  return diagramJson
+}

@@ -3,6 +3,8 @@ import {toJSON as toGlobalJSON} from './to-json/forUIGlobal'
 import {toJSON as toServiceJSON} from './to-json/forService'
 import {parsePage, parseProject} from './rxui-parser'
 
+export {getTemplateForPage} from './template'
+
 export function getGlobalJSON(toplViewModel, opts?: {
   needClone?: boolean,
   withMockData?: boolean
