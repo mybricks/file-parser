@@ -184,7 +184,7 @@ function proDiagram(diagram) {
   if (diagram.comAry.length > 0) {
     diagram.comAry.forEach(com => {
       let type
-      if (com.runtime.hasUI()) {
+      if (com.runtime.geo) {//has ui
         type = 'ui'
       } else if (com.runtime.def.namespace === COM_NS_SCENE) {
         type = 'scene'
@@ -198,21 +198,10 @@ function proDiagram(diagram) {
 // if(com.runtime.title.indexOf('表格')>=0){
 //   debugger
 // }
-      const allInputs = com.getAllInputsInfo()
-      const inputs = allInputs?.map(input => {
-        return {
-          id: input.hostId,
-          title: input.title
-        }
-      })
 
-      const allOutputs = com.getAllOutputsInfo()
-      const outputs = allOutputs?.map(output => {
-        return {
-          id: output.hostId,
-          title: output.title
-        }
-      })
+      const inputs = getAllInputs(com)
+
+      const outputs = getAllOutputs(com)
 
       const comJSON = {
         id: com.id,
@@ -265,4 +254,68 @@ function proDiagram(diagram) {
   })
 
   return diagramJson
+}
+
+function getAllInputs(com) {
+  const inputs = []
+  if (com.inputPins) {
+    com.inputPins.forEach(pin => {
+      inputs.push({
+        id: pin.hostId,
+        title: pin.title
+      })
+    })
+  }
+
+  if (com.inputPinsInModel) {
+    com.inputPinsInModel.forEach(pin => {
+      inputs.push({
+        id: pin.hostId,
+        title: pin.title
+      })
+    })
+  }
+
+  if (com.inputPinExts) {
+    com.inputPinExts.forEach(pin => {
+      inputs.push({
+        id: pin.hostId,
+        title: pin.title
+      })
+    })
+  }
+
+  return inputs
+}
+
+function getAllOutputs(com) {
+  const outputs = []
+  if (com.outputPins) {
+    com.outputPins.forEach(pin => {
+      outputs.push({
+        id: pin.hostId,
+        title: pin.title
+      })
+    })
+  }
+
+  if (com.outputPinsInModel) {
+    com.outputPinsInModel.forEach(pin => {
+      outputs.push({
+        id: pin.hostId,
+        title: pin.title
+      })
+    })
+  }
+
+  if (com.outputPinExts) {
+    com.outputPinExts.forEach(pin => {
+      outputs.push({
+        id: pin.hostId,
+        title: pin.title
+      })
+    })
+  }
+
+  return outputs
 }
