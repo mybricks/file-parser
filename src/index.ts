@@ -2,6 +2,7 @@ import {toJSON} from './to-json/forUIModule'
 import {toJSON as toGlobalJSON} from './to-json/forUIGlobal'
 import {toJSON as toServiceJSON} from './to-json/forService'
 import {parsePage, parseProject} from './rxui-parser'
+import { getPageTemplateJSON } from './template'
 
 export {getPageTemplateJSON} from './template'
 
@@ -66,6 +67,14 @@ export function toJSONFromPageDump(pageJSON: string, opts?: { forMPA: boolean })
   const temp = parsePage(content)
   
   return getJSONFromModule(temp as any, opts)
+}
+
+export function getPageTemplateJSONFromDumpJson(pageJSON: string, opts?: { forMPA: boolean }) {
+  const content = JSON.parse(pageJSON)?.content
+  
+  const temp = parsePage(content?.['xg.desn.stageview'])?.mainModule;
+
+  return getPageTemplateJSON(temp as any)
 }
 
 export function toJSONFromProjectDump(pageJSON: string | { projectContent }) {
