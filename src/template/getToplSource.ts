@@ -171,11 +171,16 @@ function proDiagram(diagram) {
   } as any
 
   if (diagram.startWithCom) {
+    let startWithCom = diagram.startWithCom
+    startWithCom = startWithCom.forkedFrom||startWithCom
+
+    const startWithComRt = startWithCom.runtime
+
     diagramJson.type = 'event'
     diagramJson.from = {
       com: {
-        id: diagram.startWithCom.id,
-        title: diagram.startWithCom.title,
+        id: startWithComRt.id,
+        title: startWithComRt.title,
         pinId: diagram.startWithCom.outputPins[0].hostId
       }
     }
