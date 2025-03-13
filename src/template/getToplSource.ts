@@ -175,7 +175,7 @@ function proDiagram(diagram) {
     diagramJson.from = {
       com: {
         id: diagram.startWithCom.id,
-        title: diagram.startWithCom.runtime.title,
+        title: diagram.startWithCom.title,
         pinId: diagram.startWithCom.outputPins[0].hostId
       }
     }
@@ -183,14 +183,17 @@ function proDiagram(diagram) {
 
   if (diagram.comAry.length > 0) {
     diagram.comAry.forEach(com => {
+      const realCom = com.forkedFrom || com
+      const comRt = realCom.runtime
+
       let type
-      if (com.runtime.geo) {//has ui
+      if (comRt.geo) {//has ui
         type = 'ui'
-      } else if (com.runtime.def.namespace === COM_NS_SCENE) {
+      } else if (comRt.def.namespace === COM_NS_SCENE) {
         type = 'scene'
-      } else if (com.runtime.def.namespace === COM_NS_VAR) {
+      } else if (comRt.def.namespace === COM_NS_VAR) {
         type = 'var'
-      } else if (com.runtime.def.namespace === COM_NS_FX) {
+      } else if (comRt.def.namespace === COM_NS_FX) {
         type = 'fx'
       } else {
         type = 'js'
@@ -205,16 +208,16 @@ function proDiagram(diagram) {
 
       const comJSON = {
         id: com.id,
-        title: com.runtime.title,
-        namespace: com.runtime.def.namespace,
+        title: comRt.title,
+        namespace: comRt.def.namespace,
         type,
         style: com.style,
         inputs,
         outputs
       } as any
 
-      if (!com.runtime.hasUI()) {
-        comJSON.data = com.runtime.model.data
+      if (!comRt.geo) {
+        comJSON.data = comRt.model.data
       }
 
       comAry.push(comJSON)
@@ -225,11 +228,14 @@ function proDiagram(diagram) {
     const startPin = con.startPin
     const finishPin = con.finishPin
 
+    const startParent = startPin.parent
+    const finishParent = finishPin.parent
+
     const connection = {
       from: {
         com: {
-          id: startPin.parent.id,
-          title: startPin.parent.runtime.title
+          id: startParent.id,
+          title: startParent.title
         },
         pin: {
           id: startPin.hostId,
@@ -239,8 +245,8 @@ function proDiagram(diagram) {
       },
       to: {
         com: {
-          id: finishPin.parent.id,
-          title: finishPin.parent.runtime.title
+          id: finishParent.id,
+          title: finishParent.title
         },
         pin: {
           id: finishPin.hostId,

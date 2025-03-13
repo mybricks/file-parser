@@ -830,6 +830,8 @@ export function toFrameJSON(frame, regs: {
         let ioProxy
 
         if (def.namespace === COM_NS_FX) {//fn
+          //debugger
+
           ioProxy = {
             id: com.ioProxy?.id,
             type: 'fx'
