@@ -172,16 +172,18 @@ function proDiagram(diagram) {
 
   if (diagram.startWithCom) {
     let startWithCom = diagram.startWithCom
-    startWithCom = startWithCom.forkedFrom||startWithCom
+    startWithCom = startWithCom.forkedFrom || startWithCom
 
     const startWithComRt = startWithCom.runtime
+    const outputPin = diagram.startWithCom.outputPins[0]
+    const realOutputPin = outputPin.forkedFrom || outputPin
 
     diagramJson.type = 'event'
     diagramJson.from = {
       com: {
         id: startWithComRt.id,
         title: startWithComRt.title,
-        pinId: diagram.startWithCom.outputPins[0].hostId
+        pinId: realOutputPin.hostId
       }
     }
   }
@@ -211,8 +213,12 @@ function proDiagram(diagram) {
 
       const outputs = getAllOutputs(com)
 
+      // if(!com.id){
+      //   debugger
+      // }
+
       const comJSON = {
-        id: com.id,
+        id: comRt.id,
         title: comRt.title,
         namespace: comRt.def.namespace,
         type,
@@ -231,33 +237,51 @@ function proDiagram(diagram) {
 
   diagram.conAry.forEach(con => {
     const startPin = con.startPin
+    const realStartPin = startPin.forkedFrom || startPin
+
     const finishPin = con.finishPin
+    const realFinishPin = finishPin.forkedFrom || finishPin
 
     const startParent = startPin.parent
+    const realStartParent = startParent.forkedFrom || startParent
+    const startParentRt = realStartParent.runtime
+
     const finishParent = finishPin.parent
+    const realFinishParent = finishParent.forkedFrom || finishParent
+    const finishParentRt = realFinishParent.runtime
+
+    // if(!startPin.hostId||!finishPin.hostId){
+    //   debugger
+    // }
 
     const connection = {
       from: {
-        com: {
-          id: startParent.id,
-          title: startParent.title
-        },
         pin: {
-          id: startPin.hostId,
-          title: startPin.title,
+          id: realStartPin.hostId,
+          title: realStartPin.title,
           position: con.startPo
         }
       },
       to: {
-        com: {
-          id: finishParent.id,
-          title: finishParent.title
-        },
         pin: {
-          id: finishPin.hostId,
-          title: finishPin.title,
+          id: realFinishPin.hostId,
+          title: realFinishPin.title,
           position: con.finishPo
         }
+      }
+    } as any
+
+    if (startParentRt) {
+      connection.from.com = {
+        id: startParentRt.id,
+        title: startParentRt.title
+      }
+    }
+
+    if (finishParentRt) {
+      connection.to.com = {
+        id: finishParentRt.id,
+        title: finishParentRt.title
       }
     }
 
@@ -271,8 +295,9 @@ function getAllInputs(com) {
   const inputs = []
   if (com.inputPins) {
     com.inputPins.forEach(pin => {
+      const realPin = pin.forkedFrom || pin
       inputs.push({
-        id: pin.hostId,
+        id: realPin.hostId,
         title: pin.title
       })
     })
@@ -280,8 +305,9 @@ function getAllInputs(com) {
 
   if (com.inputPinsInModel) {
     com.inputPinsInModel.forEach(pin => {
+      const realPin = pin.forkedFrom || pin
       inputs.push({
-        id: pin.hostId,
+        id: realPin.hostId,
         title: pin.title
       })
     })
@@ -303,8 +329,9 @@ function getAllOutputs(com) {
   const outputs = []
   if (com.outputPins) {
     com.outputPins.forEach(pin => {
+      const realPin = pin.forkedFrom || pin
       outputs.push({
-        id: pin.hostId,
+        id: realPin.hostId,
         title: pin.title
       })
     })
@@ -312,8 +339,9 @@ function getAllOutputs(com) {
 
   if (com.outputPinsInModel) {
     com.outputPinsInModel.forEach(pin => {
+      const realPin = pin.forkedFrom || pin
       outputs.push({
-        id: pin.hostId,
+        id: realPin.hostId,
         title: pin.title
       })
     })

@@ -3,7 +3,7 @@ import {readFileSync, writeFileSync} from "fs";
 import {resolve} from "path";
 
 (async () => {
-  const contentJson = await readFileSync(resolve(__dirname, "for-ai-tpt-dumpJson.json"))
+  const contentJson = await readFileSync(resolve(__dirname, "for-ai-tpt-dump.json"))
   //global JSON
   const resultContent = getPageTemplateJSONFromDumpJson(contentJson)//meta 单页测试
 
