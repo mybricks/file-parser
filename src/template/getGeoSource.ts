@@ -28,7 +28,19 @@ export function getSlotPrompts(slotModel) {
           style: model.style,
           data: model.data,
           slots
-        }
+        } as any
+
+        // if (rt.topl) {
+        //   const inputs = getAllInputs(rt.topl)
+        //   if (inputs) {
+        //     comJSON.inputs = inputs
+        //   }
+        //
+        //   const outputs = getAllOutputs(rt.topl)
+        //   if (outputs) {
+        //     comJSON.outputs = outputs
+        //   }
+        // }
 
         // if (def.namespace.indexOf('form') >= 0) {
         //   debugger
@@ -120,4 +132,78 @@ export function getSlotPrompts(slotModel) {
   }
 
   return ui
+}
+
+function getAllInputs(com) {
+  const inputs = []
+  if (com.inputPins) {
+    com.inputPins.forEach(pin => {
+      const realPin = pin.forkedFrom || pin
+      inputs.push({
+        id: realPin.hostId,
+        title: pin.title,
+        schema: pin.schema
+      })
+    })
+  }
+
+  if (com.inputPinsInModel) {
+    com.inputPinsInModel.forEach(pin => {
+      const realPin = pin.forkedFrom || pin
+      inputs.push({
+        id: realPin.hostId,
+        title: pin.title,
+        schema: pin.schema
+      })
+    })
+  }
+
+  if (com.inputPinExts) {
+    com.inputPinExts.forEach(pin => {
+      inputs.push({
+        id: pin.hostId,
+        title: pin.title,
+        schema: pin.schema
+      })
+    })
+  }
+
+  return inputs
+}
+
+function getAllOutputs(com) {
+  const outputs = []
+  if (com.outputPins) {
+    com.outputPins.forEach(pin => {
+      const realPin = pin.forkedFrom || pin
+      outputs.push({
+        id: realPin.hostId,
+        title: pin.title,
+        schema: pin.schema
+      })
+    })
+  }
+
+  if (com.outputPinsInModel) {
+    com.outputPinsInModel.forEach(pin => {
+      const realPin = pin.forkedFrom || pin
+      outputs.push({
+        id: realPin.hostId,
+        title: pin.title,
+        schema: pin.schema
+      })
+    })
+  }
+
+  if (com.outputPinExts) {
+    com.outputPinExts.forEach(pin => {
+      outputs.push({
+        id: pin.hostId,
+        title: pin.title,
+        schema: pin.schema
+      })
+    })
+  }
+
+  return outputs
 }

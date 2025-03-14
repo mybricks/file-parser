@@ -42,7 +42,8 @@ function proFrame(frame) {
     frame.inputPins.forEach(pin => {
       //if (!frame.parent) {//root
       inputs.push({
-        pinId: pin.hostId,
+        id: pin.id,
+        hostId: pin.hostId,
         title: pin.title,
         type: pin.type,
         schema: pin.schema,
@@ -58,7 +59,8 @@ function proFrame(frame) {
     frame.outputPins.forEach(pin => {
       //if (!frame.parent) {//root
       outputs.push({
-        id: pin.hostId,
+        id: pin.id,
+        hostId: pin.hostId,
         title: pin.title,
         type: pin.type,
         schema: pin.schema
@@ -122,13 +124,13 @@ function proFrame(frame) {
     frameJSON.frames = frames
   }
 
-  // if (inputs.length > 0) {
-  //   frameJSON.inputs = inputs
-  // }
-  //
-  // if (outputs.length > 0) {
-  //   frameJSON.outputs = outputs
-  // }
+  if (inputs.length > 0) {
+    frameJSON.inputs = inputs
+  }
+
+  if (outputs.length > 0) {
+    frameJSON.outputs = outputs
+  }
 
   return frameJSON
 }
@@ -169,6 +171,10 @@ function proDiagram(diagram) {
     comAry,
     connections
   } as any
+
+  if (diagram.isGlobal) {
+    diagramJson.type = 'scene'
+  }
 
   if (diagram.startWithCom) {
     let startWithCom = diagram.startWithCom
@@ -257,14 +263,16 @@ function proDiagram(diagram) {
     const connection = {
       from: {
         pin: {
-          id: realStartPin.hostId,
+          id: realStartPin.id,
+          hostId: realStartPin.hostId,
           title: realStartPin.title,
           position: con.startPo
         }
       },
       to: {
         pin: {
-          id: realFinishPin.hostId,
+          id: realFinishPin.id,
+          hostId: realFinishPin.hostId,
           title: realFinishPin.title,
           position: con.finishPo
         }
@@ -276,12 +284,24 @@ function proDiagram(diagram) {
         id: startParentRt.id,
         title: startParentRt.title
       }
+    } else if (startPin.parent._type === 0) {//frame
+      connection.from.frame = {
+        id: startPin.parent.id,
+        title: startPin.parent.title,
+        pinSchema: startPin.schema
+      }
     }
 
     if (finishParentRt) {
       connection.to.com = {
         id: finishParentRt.id,
         title: finishParentRt.title
+      }
+    } else if (finishPin.parent._type === 0) {//frame
+      connection.from.frame = {
+        id: finishPin.parent.id,
+        title: finishPin.parent.title,
+        pinSchema: finishPin.schema
       }
     }
 
@@ -307,7 +327,8 @@ function getAllInputs(com) {
     com.inputPinsInModel.forEach(pin => {
       const realPin = pin.forkedFrom || pin
       inputs.push({
-        id: realPin.hostId,
+        id: realPin.id,
+        hostId: realPin.hostId,
         title: pin.title
       })
     })
@@ -316,7 +337,8 @@ function getAllInputs(com) {
   if (com.inputPinExts) {
     com.inputPinExts.forEach(pin => {
       inputs.push({
-        id: pin.hostId,
+        id: pin.id,
+        hostId: pin.hostId,
         title: pin.title
       })
     })
@@ -331,7 +353,8 @@ function getAllOutputs(com) {
     com.outputPins.forEach(pin => {
       const realPin = pin.forkedFrom || pin
       outputs.push({
-        id: realPin.hostId,
+        id: realPin.id,
+        hostId: realPin.hostId,
         title: pin.title
       })
     })
@@ -341,7 +364,8 @@ function getAllOutputs(com) {
     com.outputPinsInModel.forEach(pin => {
       const realPin = pin.forkedFrom || pin
       outputs.push({
-        id: realPin.hostId,
+        id: realPin.id,
+        hostId: realPin.hostId,
         title: pin.title
       })
     })
@@ -350,7 +374,8 @@ function getAllOutputs(com) {
   if (com.outputPinExts) {
     com.outputPinExts.forEach(pin => {
       outputs.push({
-        id: pin.hostId,
+        id: pin.id,
+        hostId: pin.hostId,
         title: pin.title
       })
     })
