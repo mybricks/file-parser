@@ -172,7 +172,7 @@ function proDiagram(diagram) {
     connections
   } as any
 
-  if (diagram.isGlobal) {
+  if (diagram.isGlobal||!diagram.parent.parent) {
     diagramJson.type = 'scene'
   }
 
