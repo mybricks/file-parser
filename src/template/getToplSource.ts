@@ -318,6 +318,7 @@ function getAllInputs(com) {
       const realPin = pin.forkedFrom || pin
       inputs.push({
         id: realPin.hostId,
+        hostId: realPin.hostId,
         title: pin.title
       })
     })
