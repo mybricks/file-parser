@@ -1,13 +1,14 @@
 import * as Arrays from '../utils/arrays'
 import pkg from '../../package.json'
 import {getJSONDiff} from "../utils/json";
-import {COM_NS_FX, COM_NS_MODULE, COM_NS_SELECTION} from "../constants";
+import {COM_NS_FX, COM_NS_MODULE, COM_NS_SELECTION, COM_NS_VAR} from "../constants";
 
 export function toJSON({slot, frame}, opts: {
   forDebug?: boolean,
   needClone?: boolean,
   withMockData?: boolean,
   withIOSchema?: boolean,
+  withDiagrams?: boolean,
   onlyDiff?: {
     getComDef: () => {}
   }
@@ -31,6 +32,10 @@ export function toJSON({slot, frame}, opts: {
     frameJSON = toFrameJSON(frame, {depsReg, comsReg}, opts)
   }
 
+//   if(comsReg['u_C6zfO']){
+// debugger
+//   }
+
   return Object.assign({
       '-v': pkg.version,
       deps: depsReg,
@@ -46,6 +51,7 @@ export function toJSON({slot, frame}, opts: {
 }
 
 export function toSlotJSON(slot, {depsReg, comsReg}, frame, opts: {
+  forDebug?: boolean,
   needClone?: boolean,
   withMockData?: boolean
 }) {
@@ -57,7 +63,7 @@ export function toSlotJSON(slot, {depsReg, comsReg}, frame, opts: {
     style
   }
 
-  const scanSlot = (slot) => {
+  const scanSlot = (slot, asRoot?) => {
     // let sid
     // if (slot.parent) {
     //   sid = `${slot.parent.runtime.id}-${slot.id}`
@@ -90,27 +96,40 @@ export function toSlotJSON(slot, {depsReg, comsReg}, frame, opts: {
           }
 
           const model = opts.needClone ? JSON.parse(JSON.stringify(rt.model)) : rt.model
+          const comStyle = model.style
 
           const style = {} as any
 
           const geoPtStyle = rt.geo.parent?.style
 
-          if (geoPtStyle?.layout === 'absolute' || geoPtStyle?.layout === 'smart') {
-            delete model.style['marginTop']
-            delete model.style['marginRight']
-            delete model.style['marginBottom']
-            delete model.style['marginLeft']
-          }
+          if (comStyle) {
+            if (geoPtStyle?.layout === 'absolute' || geoPtStyle?.layout === 'smart') {
+              delete comStyle['marginTop']
+              delete comStyle['marginRight']
+              delete comStyle['marginBottom']
+              delete comStyle['marginLeft']
+            }
 
-          if (model.style) {
-            if (model.style.position === 'absolute') {
+            if (comStyle.position === 'absolute') {
               style.position = 'absolute'
             }
 
-            style.width = model.style.widthFact
-            style.height = model.style.heightFact
+            if (comStyle.width === 'auto' || comStyle.width === 'fit-content') {
+              comStyle.widthAuto = true
+            }
+
+            if (comStyle.height === 'auto' || comStyle.height === 'fit-content') {
+              comStyle.heightAuto = true
+            }
+
+            style.width = comStyle.widthFact
+            style.height = comStyle.heightFact
           } else {
             model.style = {}//兼容
+          }
+
+          if (rt.id === 'u_rS3CQ') {
+            debugger
           }
 
           comsReg[rt.id] = {
@@ -196,6 +215,12 @@ export function toSlotJSON(slot, {depsReg, comsReg}, frame, opts: {
       delete style.marginLeft
       delete style.marginRight
 
+      if (asRoot && opts.forDebug) {//调试模式下，删除root的滚动条、以便于引擎控制滚动效果
+        delete style.overflow
+        delete style.overflowX
+        delete style.overflowY
+      }
+
       return {
         id: slot.id,
         title: slot.title,
@@ -209,7 +234,7 @@ export function toSlotJSON(slot, {depsReg, comsReg}, frame, opts: {
   }
 
   if (slot) {
-    ui = scanSlot(slot)
+    ui = scanSlot(slot, true)
   }
 
   return ui
@@ -223,6 +248,7 @@ export function toFrameJSON(frame, regs: {
   needClone?,
   withMockData?,
   withIOSchema?,
+  withDiagrams?,
   onlyDiff?: {
     getComDef: () => {}
   }
@@ -258,7 +284,11 @@ export function toFrameJSON(frame, regs: {
     if (pin.rels) {
       pinRelsReg[`${idPre}-${pin.hostId}`] = pin.rels
     } else {
-      if (pin.parent._type === 1) {//component
+      if (!pin.parent) {
+        debugger
+      }
+
+      if (pin.parent?._type === 1) {//component
         const parentCom = pin.parent
         if (parentCom.runtime.def.namespace === COM_NS_MODULE) {//模块组件
           const ioProxyForCall = parentCom.ioProxyForCall
@@ -307,10 +337,21 @@ export function toFrameJSON(frame, regs: {
             debugger
           }
 
-          pinProxyReg[`${idPre}-${pin.hostId}`] = {
-            type: 'frame',
-            frameId,
-            pinId: pin.proxyPin.hostId
+          const proxyFrame = pin.proxyPin.parent
+
+          if (proxyFrame.isTypeOfExtension()) {//考虑到业务模块的情况，这里是连接到模块的输出项，用来做标识
+            pinProxyReg[`${idPre}-${pin.hostId}`] = {
+              type: proxyFrame.type,
+              frameId,
+              frameName: proxyFrame.name,
+              pinId: pin.proxyPin.hostId
+            }
+          } else {
+            pinProxyReg[`${idPre}-${pin.hostId}`] = {
+              type: 'frame',
+              frameId,
+              pinId: pin.proxyPin.hostId
+            }
           }
         }
       }
@@ -335,13 +376,10 @@ export function toFrameJSON(frame, regs: {
   }
 
   const scanOutputPin = (pin, idPre) => {
-    // if(pin.title==='ABC'){
-    //   debugger
-    // }
-
     if (pin.proxyPin) {
       if (pin.proxyPin._todo_) {
         const {frameId, pinId, pinHostId} = pin.proxyPin
+
         pinProxyReg[`${idPre}-${pin.hostId}`] = {
           type: 'frame',
           frameId,
@@ -524,7 +562,7 @@ export function toFrameJSON(frame, regs: {
         // if(!pinHostId){
         //   debugger
         // }
-
+//debugger
         consReg[`${idPre}-${pinHostId}`] = cons
       }
     }
@@ -534,6 +572,8 @@ export function toFrameJSON(frame, regs: {
     const defs = {
       id: frame.id,
       title: frame.title,
+      itemWrap: frame.itemWrapF,
+      wrap: frame.wrapF,
       _inputs: [],
       _outputs: [],
       inputs: [],
@@ -577,9 +617,6 @@ export function toFrameJSON(frame, regs: {
 
     // console.log(frame.title)
     //
-    // if (frame.title === '全局Fx卡片1') {
-    //   debugger
-    // }
 
     if (frame.inputPins) {
       frame.inputPins.forEach(pin => {
@@ -708,6 +745,10 @@ export function toFrameJSON(frame, regs: {
 
         const rt = com.runtime
 
+        if (rt.id === 'u_C6zfO') {
+          debugger
+        }
+
         // if (rt.id === 'u_6CUxt') {
         //   debugger
         // }
@@ -769,22 +810,57 @@ export function toFrameJSON(frame, regs: {
 
         if (rt.geo) {
           //debugger
+          //const geoPtStyle = rt.geo.parent?.style
+
+          // if (geoPtStyle?.layout === 'absolute' || geoPtStyle?.layout === 'smart') {
+          //   delete model.style['marginTop']
+          //   delete model.style['marginRight']
+          //   delete model.style['marginBottom']
+          //   delete model.style['marginLeft']
+          // }
+          //
+          // if (model.style) {
+          //   if (model.style.position === 'absolute') {
+          //     style.position = 'absolute'
+          //   }
+          //
+          //   style.width = model.style.widthFact
+          //   style.height = model.style.heightFact
+          // } else {
+          //   model.style = {}//兼容
+          // }
+
+
+          const comStyle = model.style
           const geoPtStyle = rt.geo.parent?.style
 
-          if (geoPtStyle?.layout === 'absolute' || geoPtStyle?.layout === 'smart') {
-            delete model.style['marginTop']
-            delete model.style['marginRight']
-            delete model.style['marginBottom']
-            delete model.style['marginLeft']
+          if (rt.id === 'u_rS3CQ') {
+            debugger
           }
 
-          if (model.style) {
-            if (model.style.position === 'absolute') {
+          if (comStyle) {
+            if (geoPtStyle?.layout === 'absolute' || geoPtStyle?.layout === 'smart') {
+              delete comStyle['marginTop']
+              delete comStyle['marginRight']
+              delete comStyle['marginBottom']
+              delete comStyle['marginLeft']
+            }
+
+            if (comStyle.width === 'auto' || comStyle.width === 'fit-content') {
+              comStyle.widthAuto = true
+            }
+
+            if (comStyle.height === 'auto' || comStyle.height === 'fit-content') {
+              comStyle.heightAuto = true
+            }
+
+            if (comStyle.position === 'absolute') {
               style.position = 'absolute'
             }
 
-            style.width = model.style.widthFact
-            style.height = model.style.heightFact
+            style.width = comStyle.widthFact
+            style.height = comStyle.heightFact
+
           } else {
             model.style = {}//兼容
           }
@@ -837,6 +913,11 @@ export function toFrameJSON(frame, regs: {
             type: 'fx'
           }
         }
+
+        if (rt.id === 'u_C6zfO') {
+          debugger
+        }
+
 
         const comReg = {
           id: rt.id,
@@ -918,7 +999,15 @@ export function toFrameJSON(frame, regs: {
 
         Arrays.each(pin => {
             scanOutputPin(pin, rt.id)
+
+            // if (opts.withDiagrams) {
+            //   outPinIdAry.push({
+            //     hostId: pin.hostId,
+            //     schema: pin.schema,
+            //   })
+            // } else {
             outPinIdAry.push(pin.hostId)
+            //}
           },
           com.outputPins,
           com.outputPinsInModel,
@@ -939,11 +1028,14 @@ export function toFrameJSON(frame, regs: {
           } else {
             idPre = '_rootFrame_'
           }
+
           //const idPre = frame.parent ? `${frame.parent.runtime.id}-${frame.id}` : '_rootFrame_'
           let ary = comsAutoRun[idPre]
+
           if (!ary) {
             ary = comsAutoRun[idPre] = []
           }
+
           ary.push({
             id: rt.id,
             def
@@ -971,6 +1063,43 @@ export function toFrameJSON(frame, regs: {
       })
     }
 
+    if (frame.diagramAry) {
+      frame.diagramAry.forEach(diagram => {//在diagram中扫描变量作为autorun的情况
+        const comAry = diagram.comAry || []
+        comAry.forEach(com => {
+          if (com.forkedFrom) {
+            const rt = com.runtime
+            if (rt && rt.def.namespace === COM_NS_VAR) {//
+              if (com.inputPins.length <= 0) {
+                let idPre
+                if (frame.parent) {
+                  if (frame.parent.runtime) {
+                    idPre = `${frame.parent.runtime.id}-${frame.id}`
+                  } else {
+                    idPre = frame.id
+                  }
+                } else {
+                  idPre = '_rootFrame_'
+                }
+
+                //const idPre = frame.parent ? `${frame.parent.runtime.id}-${frame.id}` : '_rootFrame_'
+                let ary = comsAutoRun[idPre]
+
+                if (!ary) {
+                  ary = comsAutoRun[idPre] = []
+                }
+
+                ary.push({
+                  id: rt.id,
+                  def: rt.def
+                })
+              }
+            }
+          }
+        })
+      })
+    }
+
     return defs
   }
 
@@ -978,12 +1107,29 @@ export function toFrameJSON(frame, regs: {
     scanFrame(frame)
   }
 
+  let frameType
+  if (frame.type === 'extension') {
+    if (frame.extType) {
+      frameType = `extension-${frame.extType}`
+    } else {
+      frameType = `extension`
+    }
+  } else {
+    frameType = frame.type
+  }
+
+// console.log('consReg::::',consReg)
+//
+//   if (frame.title === 'API') {
+//     debugger
+//   }
+
   return {
     '-v': pkg.version,
     id: frame.id,
     name: frame.name,
     title: frame.title,
-    type: frame.type,
+    type: frameType,
     deps: depsReg,
     coms: comsReg,
     comsAutoRun,

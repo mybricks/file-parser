@@ -172,22 +172,23 @@ function proDiagram(diagram) {
     connections
   } as any
 
-  if (diagram.isGlobal||!diagram.parent.parent) {
+  if (diagram.isGlobal || !diagram.parent.parent) {
     diagramJson.type = 'scene'
   }
 
   if (diagram.startWithCom) {
-    let startWithCom = diagram.startWithCom
-    startWithCom = startWithCom.forkedFrom || startWithCom
+    const startWithCom = diagram.startWithCom
+    const startWithComForked = startWithCom.forkedFrom || startWithCom
 
-    const startWithComRt = startWithCom.runtime
-    const outputPin = diagram.startWithCom.outputPins[0]
+    const startWithComRt = startWithComForked.runtime
+    const outputPin = startWithCom.outputPins[0]
     const realOutputPin = outputPin.forkedFrom || outputPin
 
     diagramJson.type = 'event'
     diagramJson.from = {
       com: {
         id: startWithComRt.id,
+        nodeId: startWithCom.renderKey,
         title: startWithComRt.title,
         pinId: realOutputPin.hostId
       }
@@ -225,6 +226,7 @@ function proDiagram(diagram) {
 
       const comJSON = {
         id: comRt.id,
+        nodeId: com.renderKey,
         title: comRt.title,
         namespace: comRt.def.namespace,
         type,
@@ -249,10 +251,26 @@ function proDiagram(diagram) {
     const realFinishPin = finishPin.forkedFrom || finishPin
 
     const startParent = startPin.parent
+    let startNodeId
+    if (startParent.forkedFrom) {
+      startNodeId = startParent.renderKey
+    } else {
+      startNodeId = startParent.id
+    }
+
     const realStartParent = startParent.forkedFrom || startParent
     const startParentRt = realStartParent.runtime
 
     const finishParent = finishPin.parent
+
+    let finishNodeId
+    if (finishParent.forkedFrom) {
+      finishNodeId = finishParent.renderKey
+    } else {
+      finishNodeId = finishParent.id
+    }
+
+
     const realFinishParent = finishParent.forkedFrom || finishParent
     const finishParentRt = realFinishParent.runtime
 
@@ -282,6 +300,7 @@ function proDiagram(diagram) {
     if (startParentRt) {
       connection.from.com = {
         id: startParentRt.id,
+        nodeId: startNodeId,
         title: startParentRt.title
       }
     } else if (startPin.parent._type === 0) {//frame
@@ -295,6 +314,7 @@ function proDiagram(diagram) {
     if (finishParentRt) {
       connection.to.com = {
         id: finishParentRt.id,
+        nodeId: finishNodeId,
         title: finishParentRt.title
       }
     } else if (finishPin.parent._type === 0) {//frame

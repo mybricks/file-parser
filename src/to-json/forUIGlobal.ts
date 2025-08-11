@@ -10,16 +10,16 @@ export function toJSON(toplViewModel, opts: {
   const consReg = {}
   const pinRelsReg = {}
   const pinProxyReg = {}
-  
+
   const fxFrames = []
-  
+
   //const themes = []
-  
+
   const scanInputPin = (pin, idPre) => {
     if (pin.rels) {
       pinRelsReg[`${idPre}-${pin.hostId}`] = pin.rels
     }
-    
+
     if (pin.proxyPin) {
       if (pin.proxyPin._todo_) {
         const {frameId, pinId, pinHostId} = pin.proxyPin
@@ -32,7 +32,7 @@ export function toJSON(toplViewModel, opts: {
         const comOrFrame = pin.proxyPin.parent
         if (comOrFrame && comOrFrame._type === 0) {//frame
           const frameId = comOrFrame.id
-          
+
           pinProxyReg[`${idPre}-${pin.hostId}`] = {
             type: 'frame',
             frameId,
@@ -42,12 +42,12 @@ export function toJSON(toplViewModel, opts: {
       }
     }
   }
-  
+
   const scanOutputPin = (pin, idPre) => {
     // if(pin.title==='打开'){
     //   debugger
     // }
-    
+
     if (pin.proxyPin) {
       if (pin.proxyPin._todo_) {
         const {frameId, pinId, pinHostId} = pin.proxyPin
@@ -60,11 +60,11 @@ export function toJSON(toplViewModel, opts: {
         const comOrFrame = pin.proxyPin.parent
         if (comOrFrame && comOrFrame._type === 0) {//frame
           const frameId = comOrFrame.id
-          
+
           if (comOrFrame) {
-          
+
           }
-          
+
           pinProxyReg[`${idPre}-${pin.hostId}`] = {
             type: 'frame',
             frameId,
@@ -73,27 +73,27 @@ export function toJSON(toplViewModel, opts: {
         }
       }
     }
-    
+
     if (pin.conAry) {
       const cons = []
       pin.conAry.forEach(con => {
         let frameKey
-        
+
         const fPin = con.finishPin
         if (!fPin) {
           return
         }
-        
+
         if (cons.find(tc => tc.id === con.id)) {
           debugger
           return//重复连接
         }
-        
+
         let timerPinInputId
         if (fPin.parent.timerInputPin) {
           timerPinInputId = fPin.parent.timerInputPin.id
         }
-        
+
         const frame = con.parent.parent
         if (frame) {//frame 可能不存在（对应的diagramModelparent为空)
           if (frame.parent) {
@@ -108,16 +108,15 @@ export function toJSON(toplViewModel, opts: {
         } else {
           debugger
         }
-        
-        
+
         const pinParent = fPin.parent
         if (pinParent._type === 1) {//toplcom
           const realFPin = fPin.forkedFrom || fPin
           const realParentCom = pinParent.forkedFrom || pinParent
-          
+
           const startPinParentKey = con.startPin.parent._key
           const finishPinParentKey = con.finishPin.parent._key
-          
+
           cons.push({
             id: con.id,
             type: 'com',
@@ -136,15 +135,15 @@ export function toJSON(toplViewModel, opts: {
           })
         } else {
           const realFPin = fPin.forkedFrom || fPin
-          
+
           const fp = realFPin.parent
           if (fp._type === 0) {//frame
             const forkedFromJointPin = realFPin.forkedAsJoint//joint
             if (forkedFromJointPin) {
               const pinHostId = forkedFromJointPin.from?.hostId || forkedFromJointPin.hostId
-              
+
               const startPinParentKey = con.startPin.parent?._key
-              
+
               const nCon = {
                 id: con.id,
                 type: 'frame',
@@ -158,18 +157,18 @@ export function toJSON(toplViewModel, opts: {
                 isIgnored: opts?.forDebug ? con.isIgnored : void 0,
                 isBreakpoint: opts?.forDebug ? con.isBreakpoint : void 0
               }
-              
+
               cons.push(nCon)//{frameId, comId, pinId}
-              
+
               const newIdPre = `${nCon.comId ? nCon.comId + '-' : ''}${nCon.frameId}`
-              
+
               scanOutputPin(forkedFromJointPin, newIdPre)//scan for it
             } else {
               // if (!realFPin.hostId) {
               //   debugger
               // }
               const startPinParentKey = con.startPin.parent?._key
-              
+
               const comId = fp.parent?._type === 1 ? fp.parent.runtime.id : void 0//toplcom
               cons.push({
                 id: con.id,
@@ -188,7 +187,7 @@ export function toJSON(toplViewModel, opts: {
           }
         }
       })
-      
+
       if (cons.length > 0) {
         let pinHostId
         if (pin.from && pin.from.hostId) {//joint
@@ -196,65 +195,85 @@ export function toJSON(toplViewModel, opts: {
         } else {
           pinHostId = pin.hostId
         }
-        
+
         // if(!pinHostId){
         //   debugger
         // }
-        
+
         consReg[`${idPre}-${pinHostId}`] = cons
       }
     }
   }
-  
+
   if (toplViewModel) {
+    const regCom = (com) => {
+      const rt = com.runtime
+      if (comsReg[rt.id]) {
+        return
+      }
+
+      const def = rt.def
+
+      const configPinIdAry = []
+      const inputPinIdAry = []
+      const outPinIdAry = []
+
+      const geo = rt.geo
+
+      const model = opts?.needClone ? JSON.parse(JSON.stringify(rt.model)) : rt.model
+
+      // if(rt.title==='全局变量0'){
+      //   debugger
+      // }
+
+      comsReg[rt.id] = {
+        id: rt.id,
+        def,
+        title: rt.title,
+        model,
+        reservedEditorAry: geo ? geo.reservedEditorAry : void 0,
+        configs: configPinIdAry,
+        inputs: inputPinIdAry,
+        outputs: outPinIdAry
+      }
+      // if(com.title==='对话框'){
+      //   debugger
+      // }
+
+      Arrays.each(pin => {
+          scanInputPin(pin, rt.id)
+          inputPinIdAry.push(pin.hostId)
+        }, com.inputPins,
+        com.inputPinsInModel,
+        com.inputPinExts,
+      )
+
+      Arrays.each(pin => {
+          scanOutputPin(pin, rt.id)
+          outPinIdAry.push(pin.hostId)
+        }, com.outputPins,
+        com.outputPinsInModel,
+        com.outputPinExts,
+        com.outputPinNexts)
+      // if (com.runtime.def.rtType === 'js') {
+      //
+      // }
+    }
+
     if (toplViewModel.varComAry) {//全局变量
       toplViewModel.varComAry.forEach(com => {
-        const rt = com.runtime
-        const def = rt.def
-        
-        const configPinIdAry = []
-        const inputPinIdAry = []
-        const outPinIdAry = []
-        
-        const geo = rt.geo
-        
-        const model = opts?.needClone ? JSON.parse(JSON.stringify(rt.model)) : rt.model
-        
-        comsReg[rt.id] = {
-          id: rt.id,
-          def,
-          title: rt.title,
-          model,
-          reservedEditorAry: geo ? geo.reservedEditorAry : void 0,
-          configs: configPinIdAry,
-          inputs: inputPinIdAry,
-          outputs: outPinIdAry
-        }
-        // if(com.title==='对话框'){
-        //   debugger
-        // }
-        
-        Arrays.each(pin => {
-            scanInputPin(pin, rt.id)
-            inputPinIdAry.push(pin.hostId)
-          }, com.inputPins,
-          com.inputPinsInModel,
-          com.inputPinExts,
-        )
-        
-        Arrays.each(pin => {
-            scanOutputPin(pin, rt.id)
-            outPinIdAry.push(pin.hostId)
-          }, com.outputPins,
-          com.outputPinsInModel,
-          com.outputPinExts,
-          com.outputPinNexts)
-        // if (com.runtime.def.rtType === 'js') {
-        //
-        // }
+        regCom(com)
       })
+
+      if (toplViewModel.diagramAry) {
+        toplViewModel.diagramAry.forEach(diagram => {//全局变量对应的diagram
+          diagram.comAry.forEach(com => {
+            regCom(com)
+          })
+        })
+      }
     }
-    
+
     if (toplViewModel.frames) {//全局Fx与extension类型
       toplViewModel.frames.forEach(frame => {
         if ((!frame.bizType || frame.bizType === 'ui')) {
@@ -262,8 +281,13 @@ export function toJSON(toplViewModel, opts: {
             const frameJSON = toFrameJSON(frame, {}, opts)
             fxFrames.push(frameJSON)
           }
-          
+
           if (frame.type === 'extension') {
+            const frameJSON = toFrameJSON(frame, {}, opts)
+            fxFrames.push(frameJSON)
+          }
+
+          if (frame.type === 'bizModule') {
             const frameJSON = toFrameJSON(frame, {}, opts)
             fxFrames.push(frameJSON)
           }
@@ -271,7 +295,7 @@ export function toJSON(toplViewModel, opts: {
       })
     }
   }
-  
+
   return {
     comsReg,
     consReg,

@@ -26,6 +26,7 @@ export function getJSONFromModule(module: {
                                   },
                                   opts?: {
                                     forMPA?: boolean,
+                                    forDebug?:boolean,
                                     needClone?: boolean,
                                     withMockData?: boolean,
                                     onlyDiff?: {
