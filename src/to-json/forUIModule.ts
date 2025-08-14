@@ -834,9 +834,9 @@ export function toFrameJSON(frame, regs: {
           const comStyle = model.style
           const geoPtStyle = rt.geo.parent?.style
 
-          if (rt.id === 'u_V3Ni3') {
-            debugger
-          }
+          // if (rt.id === 'u_V3Ni3') {
+          //   debugger
+          // }
 
           if (comStyle) {
             if (geoPtStyle?.layout === 'absolute' || geoPtStyle?.layout === 'smart') {
