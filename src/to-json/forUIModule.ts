@@ -339,7 +339,7 @@ export function toFrameJSON(frame, regs: {
 
           const proxyFrame = pin.proxyPin.parent
 
-          if (proxyFrame.isTypeOfExtension()) {//考虑到业务模块的情况，这里是连接到模块的输出项，用来做标识
+          if (proxyFrame.isTypeOfExtension?.()) {//考虑到业务模块的情况，这里是连接到模块的输出项，用来做标识
             pinProxyReg[`${idPre}-${pin.hostId}`] = {
               type: proxyFrame.type,
               frameId,
@@ -909,7 +909,7 @@ export function toFrameJSON(frame, regs: {
           //debugger
 
           ioProxy = {
-            id: com.ioProxy?.id,
+            id: com.ioProxy?.id || com.ioProxy?.frameId,
             type: 'fx'
           }
         }
