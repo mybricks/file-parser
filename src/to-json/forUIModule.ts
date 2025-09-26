@@ -496,7 +496,7 @@ export function toFrameJSON(frame, regs: {
               if (realParentComRT) {
                 const configBindWith = realParentComRT.model?.configBindWith
                 if (Array.isArray(configBindWith)) {
-                  const toplKey = fPin.parent.renderKey
+                  const toplKey = fPin.parent._key
                   const bindItem = configBindWith.find(item => item.toplKey === toplKey)
 
                   if (bindItem) {
