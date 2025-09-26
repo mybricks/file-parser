@@ -1,7 +1,7 @@
 import * as Arrays from '../utils/arrays'
 import pkg from '../../package.json'
 import {getJSONDiff} from "../utils/json";
-import {COM_NS_FX, COM_NS_MODULE, COM_NS_SELECTION, COM_NS_VAR} from "../constants";
+import {COM_NS_FX, COM_NS_MODULE, COM_NS_SELECTION, COM_NS_VAR, OUTPUT_PIN_ID_CONFIG} from "../constants";
 
 export function toJSON({slot, frame}, opts: {
   forDebug?: boolean,
@@ -461,13 +461,15 @@ export function toFrameJSON(frame, regs: {
           const realFPin = fPin.forkedFrom || fPin
           const realParentCom = pinParent.forkedFrom || pinParent
 
-          if (realParentCom && (realParentCom.runtime || realParentCom._todo_ && realParentCom.comId)) {//realParentCom._todo&&realParentCom.comId 全局变量
+          //realParentCom._todo&&realParentCom.comId 全局变量
+          if (realParentCom && (realParentCom.runtime || realParentCom._todo_ && realParentCom.comId)) {
             // if(!realParentCom.runtime){
             //   debugger
             // }
+            const realParentComRT = realParentCom.runtime
 
-            const parentComId = realParentCom.runtime?.id || realParentCom.comId
-            const parentComDef = realParentCom.runtime?.def || realParentCom.def
+            const parentComId = realParentComRT?.id || realParentCom.comId
+            const parentComDef = realParentComRT?.def || realParentCom.def
 
             const startPinParentKey = con.startPin.parent._key
             const finishPinParentKey = con.finishPin.parent._key
@@ -488,6 +490,24 @@ export function toFrameJSON(frame, regs: {
               extBinding: realFPin.extBinding,
               isIgnored: opts?.forDebug ? con.isIgnored : void 0,
               isBreakpoint: opts?.forDebug ? con.isBreakpoint : void 0
+            }
+
+            if (realFPin.hostId === OUTPUT_PIN_ID_CONFIG) {//配置组件,增加configBindWith
+              if (realParentComRT) {
+                const configBindWith = realParentComRT.model?.configBindWith
+                if (Array.isArray(configBindWith)) {
+                  const toplKey = fPin.parent.renderKey
+                  const bindItem = configBindWith.find(item => item.toplKey === toplKey)
+
+                  if (bindItem) {
+                    conReg['configBindWith'] = {
+                      toplKey,
+                      title: bindItem.title,
+                      bindWith: bindItem.bindWith
+                    }
+                  }
+                }
+              }
             }
 
             if (con.startPin.isStarter) {
@@ -938,6 +958,12 @@ export function toFrameJSON(frame, regs: {
           outputs: outPinIdAry,
           frames: void 0,
           ioProxy
+        } as any
+
+        if (typeof com.isVar === 'function' && com.isVar()) {
+          if (com.outputPins.length > 0) {
+            comReg.schema = com.outputPins[0].schema
+          }
         }
 
         comsReg[rt.id] = comReg

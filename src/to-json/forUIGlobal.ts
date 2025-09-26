@@ -1,5 +1,6 @@
 import * as Arrays from "../utils/arrays";
 import {toFrameJSON} from './forUIModule'
+import {OUTPUT_PIN_ID_CONFIG} from "../constants";
 
 export function toJSON(toplViewModel, opts: {
   needClone?: boolean,
@@ -117,7 +118,8 @@ export function toJSON(toplViewModel, opts: {
           const startPinParentKey = con.startPin.parent._key
           const finishPinParentKey = con.finishPin.parent._key
 
-          cons.push({
+
+          const conReg = {
             id: con.id,
             type: 'com',
             frameKey,
@@ -132,7 +134,30 @@ export function toJSON(toplViewModel, opts: {
             extBinding: realFPin.extBinding,
             isIgnored: opts?.forDebug ? con.isIgnored : void 0,
             isBreakpoint: opts?.forDebug ? con.isBreakpoint : void 0
-          })
+          }
+
+          if (realFPin.hostId === OUTPUT_PIN_ID_CONFIG) {//配置组件,增加configBindWith
+            const realParentComRT = realParentCom.runtime
+
+            if (realParentComRT) {
+              const configBindWith = realParentComRT.model?.configBindWith
+              if (Array.isArray(configBindWith)) {
+                const toplKey = fPin.parent.renderKey
+                const bindItem = configBindWith.find(item => item.toplKey === toplKey)
+
+                if (bindItem) {
+                  conReg['configBindWith'] = {
+                    toplKey,
+                    title: bindItem.title,
+                    bindWith: bindItem.bindWith
+                  }
+                }
+              }
+            }
+          }
+
+          cons.push(conReg)
+
         } else {
           const realFPin = fPin.forkedFrom || fPin
 
@@ -226,7 +251,7 @@ export function toJSON(toplViewModel, opts: {
       //   debugger
       // }
 
-      comsReg[rt.id] = {
+      const comReg = {
         id: rt.id,
         def,
         title: rt.title,
@@ -235,7 +260,15 @@ export function toJSON(toplViewModel, opts: {
         configs: configPinIdAry,
         inputs: inputPinIdAry,
         outputs: outPinIdAry
+      } as any
+
+      if (typeof com.isVar === 'function' && com.isVar()) {
+        if (com.outputPins.length > 0) {
+          comReg.schema = com.outputPins[0].schema
+        }
       }
+
+      comsReg[rt.id] = comReg
       // if(com.title==='对话框'){
       //   debugger
       // }
