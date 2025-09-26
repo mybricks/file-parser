@@ -938,7 +938,6 @@ export function toFrameJSON(frame, regs: {
           debugger
         }
 
-
         const comReg = {
           id: rt.id,
           def,
@@ -960,7 +959,7 @@ export function toFrameJSON(frame, regs: {
           ioProxy
         } as any
 
-        if (typeof com.isVar === 'function' && com.isVar()) {
+        if (rt.def.namespace===COM_NS_VAR) {
           if (com.outputPins.length > 0) {
             comReg.schema = com.outputPins[0].schema
           }

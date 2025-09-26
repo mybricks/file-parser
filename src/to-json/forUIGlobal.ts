@@ -1,6 +1,6 @@
 import * as Arrays from "../utils/arrays";
 import {toFrameJSON} from './forUIModule'
-import {OUTPUT_PIN_ID_CONFIG} from "../constants";
+import {COM_NS_VAR, OUTPUT_PIN_ID_CONFIG} from "../constants";
 
 export function toJSON(toplViewModel, opts: {
   needClone?: boolean,
@@ -262,7 +262,7 @@ export function toJSON(toplViewModel, opts: {
         outputs: outPinIdAry
       } as any
 
-      if (typeof com.isVar === 'function' && com.isVar()) {
+      if (rt.def.namespace===COM_NS_VAR) {
         if (com.outputPins.length > 0) {
           comReg.schema = com.outputPins[0].schema
         }
