@@ -487,6 +487,7 @@ export function toFrameJSON(frame, regs: {
               pinId: realFPin.hostId,
               pinType: realFPin.type,
               direction: realFPin.direction,
+              extData:con.extData,
               extBinding: realFPin.extBinding,
               isIgnored: opts?.forDebug ? con.isIgnored : void 0,
               isBreakpoint: opts?.forDebug ? con.isBreakpoint : void 0

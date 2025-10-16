@@ -118,7 +118,6 @@ export function toJSON(toplViewModel, opts: {
           const startPinParentKey = con.startPin.parent._key
           const finishPinParentKey = con.finishPin.parent._key
 
-
           const conReg = {
             id: con.id,
             type: 'com',
@@ -131,6 +130,7 @@ export function toJSON(toplViewModel, opts: {
             pinId: realFPin.hostId,
             pinType: realFPin.type,
             direction: realFPin.direction,
+            extData:con.extData,
             extBinding: realFPin.extBinding,
             isIgnored: opts?.forDebug ? con.isIgnored : void 0,
             isBreakpoint: opts?.forDebug ? con.isBreakpoint : void 0
