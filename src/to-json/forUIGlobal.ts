@@ -1,6 +1,7 @@
 import * as Arrays from "../utils/arrays";
 import {toFrameJSON} from './forUIModule'
-import {COM_NS_VAR, OUTPUT_PIN_ID_CONFIG} from "../constants";
+import {COM_NS_VAR, INPUT_PIN_ID_CONFIG} from "../constants";
+import {searchBindWithByToplKey} from "./utils";
 
 export function toJSON(toplViewModel, opts: {
   needClone?: boolean,
@@ -95,7 +96,7 @@ export function toJSON(toplViewModel, opts: {
           timerPinInputId = fPin.parent.timerInputPin.id
         }
 
-        const frame = con.parent.parent
+        const frame = con.parent?.parent
         if (frame) {//frame 可能不存在（对应的diagramModelparent为空)
           if (frame.parent) {
             if (frame.parent._type === 1) {
@@ -130,23 +131,24 @@ export function toJSON(toplViewModel, opts: {
             pinId: realFPin.hostId,
             pinType: realFPin.type,
             direction: realFPin.direction,
-            extData:con.extData,
+            extData: con.extData,
             extBinding: realFPin.extBinding,
             isIgnored: opts?.forDebug ? con.isIgnored : void 0,
             isBreakpoint: opts?.forDebug ? con.isBreakpoint : void 0
           }
 
-          if (realFPin.hostId === OUTPUT_PIN_ID_CONFIG) {//配置组件,增加configBindWith
+          if (realFPin.hostId === INPUT_PIN_ID_CONFIG) {//配置组件,增加configBindWith
             const realParentComRT = realParentCom.runtime
 
             if (realParentComRT) {
               const configBindWith = realParentComRT.model?.configBindWith
+
               if (Array.isArray(configBindWith)) {
                 const toplKey = fPin.parent._key
-                const bindItem = configBindWith.find(item => item.toplKey === toplKey)
-
+                const bindItem = searchBindWithByToplKey(configBindWith, toplKey)
                 if (bindItem) {
                   conReg['configBindWith'] = {
+                    type:'var',
                     toplKey,
                     title: bindItem.title,
                     bindWith: bindItem.bindWith
@@ -262,7 +264,7 @@ export function toJSON(toplViewModel, opts: {
         outputs: outPinIdAry
       } as any
 
-      if (rt.def.namespace===COM_NS_VAR) {
+      if (rt.def.namespace === COM_NS_VAR) {
         if (com.outputPins.length > 0) {
           comReg.schema = com.outputPins[0].schema
         }

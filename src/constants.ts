@@ -17,4 +17,6 @@ export const COM_NS_SELECTION = `mybricks.core-comlib.selection`
 
 export const COM_NS_MODULE = `mybricks.core-comlib.module`
 
-export const OUTPUT_PIN_ID_CONFIG = '_config_'
+export const INPUT_PIN_ID_CONFIG = '_config_'
+
+export const OUTPUT_PIN_ID_DATA_CHANGED = '_dataChanged_'

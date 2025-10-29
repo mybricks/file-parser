@@ -98,7 +98,7 @@ export function toJSON(toplViewModel, opts: {
               timerPinInputId = fPin.parent.timerInputPin.id
             }
 
-            const frame = con.parent.parent
+            const frame = con.parent?.parent
             if (frame) {//frame 可能不存在（对应的diagramModelparent为空)
               if (frame.parent) {
                 if (frame.parent._type === 1) {

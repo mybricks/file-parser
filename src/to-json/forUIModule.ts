@@ -1,7 +1,15 @@
 import * as Arrays from '../utils/arrays'
 import pkg from '../../package.json'
 import {getJSONDiff} from "../utils/json";
-import {COM_NS_FX, COM_NS_MODULE, COM_NS_SELECTION, COM_NS_VAR, OUTPUT_PIN_ID_CONFIG} from "../constants";
+import {
+  COM_NS_FX,
+  COM_NS_MODULE,
+  COM_NS_SELECTION,
+  COM_NS_VAR,
+  INPUT_PIN_ID_CONFIG,
+  OUTPUT_PIN_ID_DATA_CHANGED
+} from "../constants";
+import {searchBindWithByToplKey} from "./utils";
 
 export function toJSON({slot, frame}, opts: {
   forDebug?: boolean,
@@ -406,6 +414,10 @@ export function toFrameJSON(frame, regs: {
     if (pin.conAry?.length > 0) {
       const cons = []
       pin.conAry.forEach(con => {
+        if(!con){
+          return
+        }
+
         let frameKey,
           targetFrameKey//组件实际所在的frame，例如frameOut组件可能是上级frame的
 
@@ -493,19 +505,48 @@ export function toFrameJSON(frame, regs: {
               isBreakpoint: opts?.forDebug ? con.isBreakpoint : void 0
             }
 
-            if (realFPin.hostId === OUTPUT_PIN_ID_CONFIG) {//配置组件,增加configBindWith
+            if (realFPin.hostId === INPUT_PIN_ID_CONFIG) {//配置组件,增加configBindWith
               if (realParentComRT) {
                 const configBindWith = realParentComRT.model?.configBindWith
                 if (Array.isArray(configBindWith)) {
                   const toplKey = fPin.parent._key
-                  const bindItem = configBindWith.find(item => item.toplKey === toplKey)
+
+                  const bindItem = searchBindWithByToplKey(configBindWith, toplKey)
 
                   if (bindItem) {
+                    let bindType
+
+                    if(pin.parent._type === 0){//frame
+                      bindType = 'frameInnerOutput'
+                    }else{
+                      bindType = 'var'
+                    }
+
                     conReg['configBindWith'] = {
+                      type:bindType,
                       toplKey,
                       title: bindItem.title,
                       bindWith: bindItem.bindWith
                     }
+                  }
+                }
+              }
+            }
+
+            if (pin.hostId === OUTPUT_PIN_ID_DATA_CHANGED) {//value_changed,增加configBindWith
+              const realParentComRT = pin.parent.runtime
+
+              if (realParentComRT) {
+                const toplKey = con.startPin.parent._key
+                const configBindWith = realParentComRT.model?.configBindWith
+                const bindItem = searchBindWithByToplKey(configBindWith, toplKey)
+
+                if(bindItem){
+                  conReg['configBindWith'] = {
+                    type:'var',
+                    toplKey,
+                    title: bindItem.title,
+                    bindWith: bindItem.bindWith
                   }
                 }
               }
