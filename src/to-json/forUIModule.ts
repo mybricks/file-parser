@@ -1139,7 +1139,7 @@ export function toFrameJSON(frame, regs: {
       frame.diagramAry.forEach(diagram => {//在diagram中扫描变量作为autorun的情况
         const comAry = diagram.comAry || []
         comAry.forEach(com => {
-          if (com.forkedFrom) {
+          if (com?.forkedFrom) {
             const rt = com.runtime
             if (rt && rt.def.namespace === COM_NS_VAR) {//
               if (com.inputPins.length <= 0) {
